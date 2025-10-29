@@ -1,67 +1,99 @@
-// Nơi cấu hình axios instance toàn cục
-import axios from "axios";
-console.log("API base URL:", process.env.NEXT_PUBLIC_API_URL);
-const baseURL =
-  process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_URL.trim() !== ""
-    ? process.env.NEXT_PUBLIC_API_URL
-    : "/api";
-export const apiClient = axios.create({
-  baseURL,
-  withCredentials: true, // để cookie HttpOnly được gửi kèm
-  headers: { "Content-Type": "application/json" },
+// src/lib/apiClient.ts
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+
+// =======================
+// 1. Tạo axios instance
+// =======================
+const apiClient: AxiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080",
+  withCredentials: true, // Gửi và nhận cookie HttpOnly
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
-console.log("API base URL:", baseURL);
-// Biến để tránh loop refresh vô hạn
+
+// =======================
+// Biến cờ tránh refresh token chạy lặp
+// =======================
 let isRefreshing = false;
+let refreshSubscribers: (() => void)[] = [];
 
-// Hàng chờ request nếu có nhiều request bị 401 cùng lúc
-let failedQueue: any[] = [];
+// Hàm thông báo cho các request khác chờ refresh xong
+function onRefreshed() {
+  refreshSubscribers.forEach((callback) => callback());
+  refreshSubscribers = [];
+}
 
-const processQueue = (error: any, token: string | null = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) prom.reject(error);
-    else prom.resolve(token);
-  });
-  failedQueue = [];
-};
+// =======================
+// Interceptor Request (tuỳ chọn)
+// =======================
+// Có thể thêm Bearer token vào header nếu BE yêu cầu.
+// Với cookie HttpOnly thì KHÔNG cần.
+// apiClient.interceptors.request.use((config) => {
+//   // Example nếu BE yêu cầu header Authorization
+//   // const token = localStorage.getItem("access_token");
+//   // if (token) config.headers.Authorization = `Bearer ${token}`;
+//   return config;
+// });
 
-// Interceptor xử lý lỗi 401 (token hết hạn)
+// =======================
+// 2. Interceptor Response (tự động refresh token)
+// =======================
 apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  (response: AxiosResponse) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-    // Nếu lỗi 401 và chưa retry
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then(() => apiClient(originalRequest))
-          .catch((err) => Promise.reject(err));
-      }
+    // Nếu lỗi không phải 401 hoặc request chưazx config xong → bỏ qua
+    if (!error.response || error.response.status !== 401) {
+      return Promise.reject(error);
+    }
 
-      originalRequest._retry = true;
+    // Nếu là request /auth/refresh hoặc /auth/login hoặc /auth/verify-2fa → không retry
+    const url = originalRequest.url || "";
+    if (url.includes("/auth/refresh") || url.includes("/auth/login") || url.includes("/auth/verify-2fa")) {
+      return Promise.reject(error);
+    }
+
+    // Nếu đã retry 1 lần rồi → tránh loop vô hạn
+    if (originalRequest._retry) {
+      return Promise.reject(error);
+    }
+
+    // =========================
+    // 3. Bắt đầu quy trình refresh
+    // =========================
+    if (!isRefreshing) {
       isRefreshing = true;
-
       try {
-        // Gọi refresh token API
-        await axios.post(
-          `${baseURL}/auth/refresh`,
-          {},
-          { withCredentials: true }
-        );
+        console.log("[apiClient] Access token expired → refreshing...");
+        // Gọi refresh API (body rỗng, cookie refresh_token sẽ tự gửi kèm)
+        const refreshResponse = await apiClient.post("/auth/refresh");
+        console.log("[apiClient] Refresh success", refreshResponse.status);
 
-        processQueue(null);
-        return apiClient(originalRequest); // Retry request cũ
-      } catch (err) {
-        processQueue(err, null);
-        return Promise.reject(err);
+        // Sau khi refresh thành công → đánh thức các request đang chờ
+        onRefreshed();
+      } catch (refreshError) {
+        console.error("[apiClient] Refresh token failed:", refreshError);
+        return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
       }
     }
 
-    return Promise.reject(error);
+    // Nếu có request khác đến trong lúc đang refresh → đợi refresh xong
+    await new Promise<void>((resolve) => refreshSubscribers.push(resolve));
+
+    // Gắn cờ retry để tránh vòng lặp vô hạn
+    originalRequest._retry = true;
+
+    // Gửi lại request cũ
+    return apiClient(originalRequest);
   }
 );
+
+// =======================
+// Export instance
+// =======================
+export default apiClient;

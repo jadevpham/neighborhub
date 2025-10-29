@@ -3,37 +3,37 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { authAPI } from "@/services/authAPI";
 
-export function useLoginMutation() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
+// export function useLoginMutation() {
+//   const router = useRouter();
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: authAPI.login,
-    onSuccess: (data) => {
-      // lưu user vào cache TanStack Query
-      queryClient.setQueryData(["user"], data.user);
-      router.push("/"); // điều hướng sang home
-    },
-  });
-}
+//   return useMutation({
+//     mutationFn: authAPI.login,
+//     onSuccess: (data) => {
+//       // lưu user vào cache TanStack Query
+//       queryClient.setQueryData(["user"], data.user);
+//       router.push("/"); // điều hướng sang home
+//     },
+//   });
+// }
 
-export function useLogoutMutation() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
+// export function useLogoutMutation() {
+//   const router = useRouter();
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: authAPI.logout,
-    onSuccess: () => {
-      queryClient.removeQueries({ queryKey: ["user"] });
-      router.push("/login");
-    },
-  });
-}
+//   return useMutation({
+//     mutationFn: authAPI.logout,
+//     onSuccess: () => {
+//       queryClient.removeQueries({ queryKey: ["user"] });
+//       router.push("/login");
+//     },
+//   });
+// }
 
-// Query profile (khi load lại trang)
-export function useUserQuery() {
+// Query profile (khi load lại trang/vào page profile)
+export function useMeQuery() {
   return useQuery({
-    queryKey: ["user"],
+    queryKey: ["me"],
     queryFn: authAPI.getProfile,
     retry: false, // nếu chưa login thì không retry liên tục
   });
