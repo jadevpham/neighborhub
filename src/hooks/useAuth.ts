@@ -3,19 +3,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { authAPI } from "@/services/authAPI";
 
-// export function useLoginMutation() {
-//   const router = useRouter();
-//   const queryClient = useQueryClient();
+export function useLoginMutation() {
+  return useMutation({
+    mutationFn: authAPI.login,
+  });
+}
 
-//   return useMutation({
-//     mutationFn: authAPI.login,
-//     onSuccess: (data) => {
-//       // lưu user vào cache TanStack Query
-//       queryClient.setQueryData(["user"], data.user);
-//       router.push("/"); // điều hướng sang home
-//     },
-//   });
-// }
+export function useVerify2FAMutation() {
+  const router = useRouter();
+  return useMutation({
+    mutationFn: authAPI.verify2fa,
+  })
+}
 
 // export function useLogoutMutation() {
 //   const router = useRouter();
@@ -38,4 +37,16 @@ export function useMeQuery() {
     retry: false, // nếu chưa login thì không retry liên tục
   });
 }
-// chỉ cần gọi const { data: user } = useAuthQuery() là bạn có user?.role để phân quyền ở các page, component khác
+// chỉ cần gọi const { data } = useAuthQuery() là bạn có user?.role để phân quyền ở các page, component khác
+
+// Update Profile
+export function useMeMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: authAPI.updateProfile,
+    // Tự refetch lại info của my profile sau khi update. Nếu có realtime thì không cần
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["me"] });
+    },
+  });
+}

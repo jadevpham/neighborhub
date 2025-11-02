@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { authAPI } from "../../../services/authAPI";
-import  OtpInput  from "./OtpInput";
-
+import OtpInput from "./OtpInput";
+import { useLoginMutation, useVerify2FAMutation } from "../../../hooks/useAuth";
 export default function LoginForm() {
   // Dùng để chuyển trang chuyển router
   const router = useRouter();
@@ -17,42 +17,44 @@ export default function LoginForm() {
 
   const [challengeId, setChallengeId] = useState("");
 
-  // Mutation 1: Login
-  const loginMut = useMutation({
-    mutationFn: authAPI.login,
-    onSuccess: (res) => {
-      // BE trả requires_2fa + challenge_id trong response body API
-      setChallengeId(res.challenge_Id);
-      setStep("otp");
-    },
-    onError: (err: any) => alert(err.message || "Login failed"),
-  });
+  const loginMutation = useLoginMutation();
+  const verify2FAMutation = useVerify2FAMutation();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    loginMut.mutate({ email, password });
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: (res) => {
+          setChallengeId(res.challenge_Id);
+          setStep("otp");
+        },
+        onError: (err: any) => {
+          alert(err.message || "Login failed");
+        },
+      }
+    );
   };
 
-  // Mutation 2: Verify 2FA
-  
-const otpMut = useMutation({
-  mutationFn: authAPI.verify2fa,
-  onSuccess: () => {
-    alert("Login success!");
-    router.replace("/me");
-  },
-  onError: (err: any) => {
-    console.error("Verify 2FA error:", err.response?.data);
-    alert(err.response?.data?.message || "OTP verification failed");
-  },
-});
-
-const handleVerify = (e: React.FormEvent) => {
-  e.preventDefault();
-  console.log("Sending:", { challengeId, otp });
-  otpMut.mutate({ challengeId, otp });
-};
-
+  const handleVerify = (e: React.FormEvent) => {
+    e.preventDefault();
+    verify2FAMutation.mutate(
+      {
+        challengeId,
+        otp,
+      },
+      {
+        onSuccess: () => {
+          alert("Login success!");
+          router.replace("/dashboard");
+        },
+        onError: (err: any) => {
+          console.error("Verify 2FA error:", err.response?.data);
+          alert(err.response?.data?.message || "OTP verification failed");
+        },
+      }
+    );
+  };
 
   return (
     <main className="relative min-h-screen flex overflow-hidden">
@@ -181,19 +183,19 @@ const handleVerify = (e: React.FormEvent) => {
                   {/* Nút LOGIN gradient vàng */}
                   <button
                     type="submit"
-                    disabled={loginMut.isPending}
+                    disabled={loginMutation.isPending}
                     className="h-12 w-44 rounded-full text-emerald-600 font-medium
                        bg-gradient-to-r from-white/90 via-white/80 to-transparent
                        shadow-md hover:shadow-lg hover:brightness-105 transition
                        disabled:opacity-70"
                   >
-                    {loginMut.isPending ? "Waiting..." : "LOGIN"}
+                    {loginMutation.isPending ? "Waiting..." : "LOGIN"}
                   </button>
 
                   {/* Lỗi (nếu có) */}
-                  {loginMut.error && (
+                  {loginMutation.error && (
                     <p className="text-red-500 text-sm">
-                      {(loginMut.error as Error).message}
+                      {(loginMutation.error as Error).message}
                     </p>
                   )}
                 </form>
@@ -202,7 +204,7 @@ const handleVerify = (e: React.FormEvent) => {
                   otp={otp}
                   setOtp={setOtp}
                   handleVerify={handleVerify}
-                  isPending={otpMut.isPending}
+                  isPending={verify2FAMutation.isPending}
                 />
               )}
             </div>

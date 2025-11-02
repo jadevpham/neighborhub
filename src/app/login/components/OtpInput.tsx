@@ -1,12 +1,6 @@
 "use client";
 import React from "react";
-
-interface OtpInputProps {
-  otp: string;
-  setOtp: (v: string) => void;
-  handleVerify: (e: React.FormEvent) => void;
-  isPending: boolean;
-}
+import { OtpInputProps } from "@/types/common";
 
 export default function OtpInput({
   otp,

@@ -17,8 +17,19 @@ export default {
           xs: '480px',
           '3xl': '1600px',
         },
+        keyframes: {
+          fadeIn: {
+            "0%": { opacity: "0", transform: "translateY(-5px)" },
+            "100%": { opacity: "1", transform: "translateY(0)" },
+          },
+        },
+        animation: {
+          fadeIn: "fadeIn 0.15s ease-out",
+        },
       },
     },
-    plugins: [],
+    plugins: [
+      
+    ],
   }
   

@@ -1,22 +1,30 @@
+import { LoginPayload, UpdateProfilePayload, Verify2FaPayload } from '@/types/auth';
 import apiClient  from '../lib/apiClient';
 
 export const authAPI = {
   // Gửi email, password đến BE thông qua API POST
-  login: async (data: { email: string; password: string }) => {
-    const res = await apiClient.post("/auth/login", data);
+  login: async (payload: LoginPayload) => {
+    const res = await apiClient.post("/auth/login", payload);
     return res.data; // { requires_2fa, challenge_id }
   },
 
-  verify2fa: async (payload: { challengeId: string; otp: string }) => {
+  verify2fa: async (payload: Verify2FaPayload) => {
     const res = await apiClient.post("/auth/verify-2fa", payload);
-    return res.data; // { user }
+    return res.data;
   },
 
   // Lấy thông tin profile của người dùng sau khi đăng nhập
   getProfile: async () => {
       const response = await apiClient.get("/auth/me");
-      return response.data;  
-    },
+      return response.data.data;  
+  },
+
+  // Update My Profile
+  updateProfile: async (payload: UpdateProfilePayload) => {
+    const response = await apiClient.patch("/auth/me", payload);
+    console.log(response);
+    return response.data;
+  },
   
   // Gửi request logout tới server
   logout: async () => {

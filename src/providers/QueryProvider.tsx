@@ -1,6 +1,7 @@
 "use client"; // Bắt buộc: QueryProvider là client component
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactNode, useState } from "react";
 
 interface Props {
@@ -16,6 +17,7 @@ export default function QueryProvider({ children }: Props) {
     // Bọc toàn bộ component con trong QueryClientProvider
     <QueryClientProvider client={queryClient}>
       {children}
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

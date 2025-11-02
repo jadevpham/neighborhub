@@ -6,6 +6,7 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 // =======================
 const apiClient: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080",
+  // baseURL: "/api/v1",
   withCredentials: true, // Gửi và nhận cookie HttpOnly
   headers: {
     "Content-Type": "application/json",
@@ -24,18 +25,6 @@ function onRefreshed() {
   refreshSubscribers.forEach((callback) => callback());
   refreshSubscribers = [];
 }
-
-// =======================
-// Interceptor Request (tuỳ chọn)
-// =======================
-// Có thể thêm Bearer token vào header nếu BE yêu cầu.
-// Với cookie HttpOnly thì KHÔNG cần.
-// apiClient.interceptors.request.use((config) => {
-//   // Example nếu BE yêu cầu header Authorization
-//   // const token = localStorage.getItem("access_token");
-//   // if (token) config.headers.Authorization = `Bearer ${token}`;
-//   return config;
-// });
 
 // =======================
 // 2. Interceptor Response (tự động refresh token)
