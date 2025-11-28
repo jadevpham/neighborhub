@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { useMeMutation } from "@/hooks/useAuth";
 import { EditProfileModalProps } from "@/types/common";
-
+import { toast } from "sonner";
+import { buildUpdateMeFormData } from "@/utils/buildUpdateMeFormData";
+import { formatDobForBE } from "@/utils/formatDate";
 export default function EditProfileModal({
   open,
   onClose,
@@ -29,25 +31,89 @@ export default function EditProfileModal({
       const currentValue = form[key as keyof typeof form];
       const initialValue = initialData?.[key as keyof typeof form];
       if (currentValue !== initialValue) {
-        acc[key] = currentValue;
+        if (key === "dob" && currentValue) {
+          acc[key] = formatDobForBE(currentValue); // convert date format
+        } else {
+          acc[key] = currentValue;
+        }
       }
       return acc;
     }, {} as Record<string, any>);
 
+    // Không có thay đổi
     if (Object.keys(changedFields).length === 0) {
-      alert("No information has been changed!");
+      toast.info("No information has been changed!", { duration: 3000 });
       onClose();
-    } else {
-      meMutation.mutate(changedFields, {
-        onSuccess: () => {
-          alert("Profile updated successfully!");
-          onClose();
-        },
-        onError: (err: any) => {
-          alert(err.message || "Update failed");
-        },
-      });
+      return;
     }
+
+    // Gọi API update
+    // meMutation.mutate(changedFields, {
+    //   onSuccess: () => {
+    //     toast.success("Profile updated successfully!", { duration: 5000 });
+    //     onClose();
+    //   },
+
+    //   onError: (err: any) => {
+    //     const api = err.response?.data;
+
+    //     // Cuộn lên top để toast nhìn thấy
+    //     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    //     // Trường hợp: BE trả message đơn
+    //     if (api?.message) {
+    //       toast.error(api.message, { duration: 5000 });
+    //       return;
+    //     }
+
+    //     // Trường hợp: nhiều lỗi trong errors object
+    //     if (api?.errors && typeof api.errors === "object") {
+    //       Object.values(api.errors).forEach((errList: any) => {
+    //         if (Array.isArray(errList)) {
+    //           errList.forEach((msg) => toast.error(msg, { duration: 5000 }));
+    //         } else {
+    //           toast.error(errList, { duration: 5000 });
+    //         }
+    //       });
+    //       return;
+    //     }
+
+    //     // Fallback
+    //     toast.error("Update failed", { duration: 5000 });
+    //   },
+    // });
+
+    const payload = buildUpdateMeFormData(changedFields);
+
+    meMutation.mutate(payload, {
+      onSuccess: () => {
+        toast.success("Profile updated successfully!", { duration: 5000 });
+        onClose();
+      },
+
+      onError: (err: any) => {
+        const api = err.response?.data;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        if (api?.message) {
+          toast.error(api.message);
+          return;
+        }
+
+        if (api?.errors && typeof api.errors === "object") {
+          Object.values(api.errors).forEach((errList: any) => {
+            if (Array.isArray(errList)) {
+              errList.forEach((msg) => toast.error(msg));
+            } else {
+              toast.error(errList);
+            }
+          });
+          return;
+        }
+
+        toast.error("Update failed");
+      },
+    });
   };
 
   if (!open) return null;

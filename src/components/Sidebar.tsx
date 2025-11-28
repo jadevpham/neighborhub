@@ -18,10 +18,9 @@ const menu = [
     name: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    role: ["system_admin", "site_admin", "management_board"],
+    role: ["system_admin", "site_admin", "management_board", "partner"],
   },
-  { name: "Sites", href: "/sites", icon: Building2, role: ["system_admin"] },
-  { name: "Zones", href: "/zones", icon: MapPin, role: ["site_admin"] },
+  { name: "Users", href: "/users", icon: Building2, role: ["system_admin", "site_admin"] },
   {
     name: "Residents",
     href: "/residents",

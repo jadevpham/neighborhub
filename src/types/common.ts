@@ -1,4 +1,3 @@
-// import { ModalPoupProps } from '@/types/common';
 import { UpdateProfilePayload } from "./auth";
 export interface OtpInputProps {
   otp: string;
@@ -25,3 +24,27 @@ export interface EditProfileModalProps {
   onClose: () => void;
   initialData?: UpdateProfilePayload;
 }
+
+// phần Parameter gửi đi và meta Response trả vê của các API get all list -> phân trang
+export interface MetaProps {
+  page: number;
+  limit: number;
+  total?: number; // optional, chỉ có ở Response, lúc gửi param không có trường dữ liệu này
+}
+export interface PaginationProps {
+  meta: MetaProps;
+  onPageChange: (page: number) => void;
+  className?: string;
+}
+
+export interface DeletePayload {
+  resource: string; // "users" | "apartments" | "sites" | ...
+  ids: string[];
+}
+export interface DeleteButtonProps {
+  ids: Array<string> | string; // nhận 1 id hoặc nhiều id
+  resourceName?: string; // tên resource để hiện confirm (optional)
+  onDeleted?: () => void; // callback sau khi xóa (optional)
+}
+
+

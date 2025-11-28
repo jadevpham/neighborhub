@@ -20,11 +20,14 @@ export const authAPI = {
   },
 
   // Update My Profile
-  updateProfile: async (payload: UpdateProfilePayload) => {
-    const response = await apiClient.patch("/auth/me", payload);
-    console.log(response);
+  updateProfile: async (payload: FormData) => {
+    const response = await apiClient.patch("/auth/me", payload, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
-  },
+  },  
   
   // Gửi request logout tới server
   logout: async () => {

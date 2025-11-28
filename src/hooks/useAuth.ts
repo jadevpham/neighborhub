@@ -16,18 +16,22 @@ export function useVerify2FAMutation() {
   })
 }
 
-// export function useLogoutMutation() {
-//   const router = useRouter();
-//   const queryClient = useQueryClient();
+export function useLogoutMutation() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
-//   return useMutation({
-//     mutationFn: authAPI.logout,
-//     onSuccess: () => {
-//       queryClient.removeQueries({ queryKey: ["user"] });
-//       router.push("/login");
-//     },
-//   });
-// }
+  return useMutation({
+    mutationFn: authAPI.logout,
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ["me"] });
+      window.location.href = "/";
+    },
+    onError: (error: any) => {
+      console.error("Logout failed:", error);
+      alert("Đăng xuất thất bại. Vui lòng thử lại!");
+    },
+  });
+}
 
 // Query profile (khi load lại trang/vào page profile)
 export function useMeQuery() {

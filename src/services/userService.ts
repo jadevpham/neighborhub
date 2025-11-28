@@ -1,1 +1,0 @@
-// Nơi call API, không call API trực tiếp trong component

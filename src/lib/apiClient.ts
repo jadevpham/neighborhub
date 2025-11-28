@@ -1,5 +1,10 @@
 // src/lib/apiClient.ts
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
 
 // =======================
 // 1. Tạo axios instance
@@ -32,16 +37,37 @@ function onRefreshed() {
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as AxiosRequestConfig & {
+      _retry?: boolean;
+    };
+    const status = error.response?.status;
 
-    // Nếu lỗi không phải 401 hoặc request chưazx config xong → bỏ qua
+    // =========================
+    // 2.1 Xử lý 403 Forbidden, user không có quyền, role không có quyền
+    // =========================
+    // if (status === 403) {
+    //   console.warn("[apiClient] 403 Forbidden — redirecting to /403");
+    //   if (typeof window !== "undefined") {
+    //     window.location.href = "/403"; // Chuyển sang trang 403
+    //   }
+    //   return Promise.reject(error);
+    // }
+
+    // =========================
+    // 2.2 Xử lý 401 Unauthorized (refresh token flow)
+    // =========================
+    // Nếu lỗi không phải 401 hoặc request chưa config xong → bỏ qua
     if (!error.response || error.response.status !== 401) {
       return Promise.reject(error);
     }
 
     // Nếu là request /auth/refresh hoặc /auth/login hoặc /auth/verify-2fa → không retry
     const url = originalRequest.url || "";
-    if (url.includes("/auth/refresh") || url.includes("/auth/login") || url.includes("/auth/verify-2fa")) {
+    if (
+      url.includes("/auth/refresh") ||
+      url.includes("/auth/login") ||
+      url.includes("/auth/verify-2fa")
+    ) {
       return Promise.reject(error);
     }
 

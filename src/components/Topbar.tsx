@@ -5,12 +5,14 @@ import Logo from "./Logo";
 import { useMeQuery } from "@/hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLogoutMutation } from "@/hooks/useAuth";
 export default function Topbar() {
   const { data } = useMeQuery();
   const user = data?.user;
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const logoutMutation = useLogoutMutation();
   // Click ngoài menu sẽ tự đóng
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -56,7 +58,7 @@ export default function Topbar() {
           >
             <img
               src={user?.avatar}
-              alt="User avatar"
+              alt="avatar"
               width={36}
               height={36}
               className="rounded-full border border-emerald-300 shadow-sm"
@@ -89,7 +91,7 @@ export default function Topbar() {
               </button>
               <button
                 onClick={() => {
-                  alert("Logout clicked");
+                  logoutMutation.mutate();
                   setOpen(!open);
                 }}
                 className="group w-full flex items-center justify-start gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition cursor-pointer"

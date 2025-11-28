@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Sidebar from "@/components/Sidebar";
 import Topbar from "@/components/Topbar";
+import { Toaster } from "sonner";
 
 /**
  * #### I. Hàm getCurrentUser()

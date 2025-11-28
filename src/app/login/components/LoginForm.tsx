@@ -1,11 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { authAPI } from "../../../services/authAPI";
 import OtpInput from "./OtpInput";
 import { useLoginMutation, useVerify2FAMutation } from "../../../hooks/useAuth";
+import { toast } from "sonner";
 export default function LoginForm() {
   // Dùng để chuyển trang chuyển router
   const router = useRouter();
@@ -22,6 +21,7 @@ export default function LoginForm() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+
     loginMutation.mutate(
       { email, password },
       {
@@ -29,8 +29,20 @@ export default function LoginForm() {
           setChallengeId(res.challenge_Id);
           setStep("otp");
         },
+
         onError: (err: any) => {
-          alert(err.message || "Login failed");
+          const message =
+            err.response?.data?.message ||
+            err.response?.data?.error ||
+            err.message ||
+            "Login failed";
+
+          toast.error(message, {
+            duration: 5000, // hiển thị lâu hơn
+          });
+
+          // scroll lên top để user thấy toast
+          window.scrollTo({ top: 0, behavior: "smooth" });
         },
       }
     );
@@ -38,6 +50,7 @@ export default function LoginForm() {
 
   const handleVerify = (e: React.FormEvent) => {
     e.preventDefault();
+
     verify2FAMutation.mutate(
       {
         challengeId,
@@ -45,12 +58,22 @@ export default function LoginForm() {
       },
       {
         onSuccess: () => {
-          alert("Login success!");
+          toast.success("Login success!");
           router.replace("/dashboard");
         },
         onError: (err: any) => {
           console.error("Verify 2FA error:", err.response?.data);
-          alert(err.response?.data?.message || "OTP verification failed");
+
+          const message =
+            err.response?.data?.message ||
+            err.response?.data?.error ||
+            "OTP verification failed";
+
+          toast.error(message, {
+            duration: 5000, // ⏳ hiển thị lâu hơn nếu bạn muốn
+          });
+
+          window.scrollTo({ top: 0, behavior: "smooth" });
         },
       }
     );
