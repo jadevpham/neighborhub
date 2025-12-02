@@ -39,7 +39,9 @@ export interface PaginationProps {
 
 export interface DeletePayload {
   resource: string; // "users" | "apartments" | "sites" | ...
-  ids: string[];
+  ids?: string[];    // dùng cho delete nhiều
+  residentId?: string;  // dùng cho delete apartment của resident
+  apartmentIds?: string[]; // dùng cho delete apartment của resident
 }
 export interface DeleteButtonProps {
   ids: Array<string> | string; // nhận 1 id hoặc nhiều id
@@ -47,4 +49,35 @@ export interface DeleteButtonProps {
   onDeleted?: () => void; // callback sau khi xóa (optional)
 }
 
+export interface BadgeProps {
+  // for Status Badge
+  status: number;
+  map: Record<number, { label: string; color: string }>;
+}
 
+export interface StatusSelectProps {
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+
+  /** enum để dùng: "user" | "resident" */
+  type: "user" | "resident";
+
+  /** optional: lọc subset */
+  allowedStatuses?: number[];
+}
+
+export interface ConfirmOptions {
+  title?: string;
+  message?: string;
+  showInput?: boolean; // dùng cho reject
+  inputLabel?: string;
+  inputPlaceholder?: string;
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm: (inputValue?: string) => void;
+}
+
+export interface ConfirmContextType {
+  openConfirm: (options: ConfirmOptions) => void;
+}

@@ -25,7 +25,7 @@ const menu = [
     name: "Residents",
     href: "/residents",
     icon: Users,
-    role: ["management_board"],
+    role: ["site_admin", "management_board"],
   },
   {
     name: "Events",

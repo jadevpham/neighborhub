@@ -3,9 +3,18 @@ export function formatDate(dateString?: string | null) {
   return dateString.replace("T", " ").replace("Z", "");
 }
 
-export function formatDobForBE(dateStr: string | null | undefined) {
-  if (!dateStr) return "";
-  const [yyyy, mm, dd] = dateStr.split("-");
+export function formatDobForBE(input: string | Date | null | undefined) {
+  if (!input) return "";
+
+  // input là Date
+  if (input instanceof Date) {
+    const d = input.getDate().toString().padStart(2, "0");
+    const m = (input.getMonth() + 1).toString().padStart(2, "0");
+    const y = input.getFullYear();
+    return `${d}-${m}-${y}`;
+  }
+  // input là string "yyyy-MM-dd"
+  const [yyyy, mm, dd] = input.split("-");
   return `${dd}-${mm}-${yyyy}`; // dd-MM-yyyy
 }
 export function formatDob(isoDate: string): string {

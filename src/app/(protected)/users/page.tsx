@@ -110,7 +110,7 @@ const UsersPage = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   return (
-    <div>
+    <div className="p-1">
       <h1 className="text-2xl font-semibold text-emerald-800 mb-8">
         User Management
       </h1>

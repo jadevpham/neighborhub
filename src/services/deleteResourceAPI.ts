@@ -3,14 +3,37 @@
 import apiClient from "../lib/apiClient";
 import { DeletePayload } from "@/types/common";
 
-export const deleteResourceAPI = async ({ resource, ids }: DeletePayload) => {
-  if (ids.length === 1) {
+export const deleteResourceAPI = async ({
+  resource,
+  ids,
+  residentId,
+  apartmentIds,
+}: DeletePayload) => {
+  // ==============================
+  // CASE 1: DELETE APARTMENT OF RESIDENT
+  // ==============================
+  if (resource === "residents" && residentId && apartmentIds?.length) {
+    return apiClient.delete(`/residents/${residentId}`, {
+      data: {
+        apartment: apartmentIds.map((id) => ({ id })),
+      },
+    });
+  }
+  // ==============================
+  // CASE 2: DELETE MULTIPLE
+  // ==============================
+  if (ids && ids.length > 1) {
+    return apiClient.delete(`/${resource}`, {
+      data: { ids },
+    });
+  }
+
+  // ==============================
+  // CASE 3: DELETE SINGLE
+  // ==============================
+  if (ids && ids.length === 1) {
     // delete single
     return apiClient.delete(`/${resource}/${ids[0]}`);
   }
-
-  // delete many
-  return apiClient.delete(`/${resource}`, {
-    data: { ids }, // BE nhận body { ids: [...] }
-  });
+  throw new Error("Invalid delete payload");
 };

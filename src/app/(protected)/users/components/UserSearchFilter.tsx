@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { UserSearchFilterProps } from "@/types/user"; // ✅ import từ file ui.ts
 import { useRouter } from "next/navigation";
+import StatusSelect from "@/components/StatusSelect";
 const UserSearchFilter: React.FC<UserSearchFilterProps> = ({
   currentRole,
   sites = [],
@@ -76,16 +77,13 @@ const UserSearchFilter: React.FC<UserSearchFilterProps> = ({
         {/* Status */}
         <div className="flex flex-col min-w-[140px]">
           <label className="text-sm text-gray-600 mb-1">Status</label>
-          <select
+          <StatusSelect
             name="status"
             value={filters.status}
             onChange={handleChange}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 outline-none"
-          >
-            <option value="">All</option>
-            <option value="1">Active</option>
-            <option value="0">Blocked</option>
-          </select>
+            type="user"
+            allowedStatuses={[1, 0]} // Active, Blocked
+          />
         </div>
 
         {/* Role (system_admin only) */}
@@ -149,24 +147,24 @@ const UserSearchFilter: React.FC<UserSearchFilterProps> = ({
         <div className="flex gap-2">
           <button
             type="submit"
-            className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors"
+            className="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors cursor-pointer"
           >
             Search
           </button>
           <button
             type="button"
             onClick={handleClear}
-            className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50"
+            className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 cursor-pointer"
           >
             Clear
           </button>
           <button
-          type="button"
-          onClick={() => router.push("/users/userCreate")}
-          className="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600 transition-colors"
-        >
-          + Create
-        </button>
+            type="button"
+            onClick={() => router.push("/users/userCreate")}
+            className="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600 transition-colors cursor-pointer"
+          >
+            + Create
+          </button>
         </div>
       </form>
     </div>

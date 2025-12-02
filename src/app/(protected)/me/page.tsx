@@ -13,7 +13,7 @@ export default function ProfilePage() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div>
+    <div className="p-1">
       {isLoading ? (
         <div className="text-center py-10">Loading...</div>
       ) : (
