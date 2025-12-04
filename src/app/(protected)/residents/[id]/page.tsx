@@ -34,6 +34,7 @@ import {
 } from "@/components/StatusBadge";
 import { useDeleteResource } from "@/hooks/useDelete";
 import { useConfirm } from "@/components/ConfirmProvider";
+import PageHeader from "@/components/PageHeader";
 export default function ResidentDetailPage() {
   const resident_id = useParams()?.id as string;
   const router = useRouter();
@@ -170,16 +171,17 @@ export default function ResidentDetailPage() {
     }));
   };
   return (
-    <div className="p-1">
+    <>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
         <>
           {/* TITLE */}
-          <h1 className="text-2xl font-semibold text-emerald-800 mb-6">
-            Resident Management — Detail
-          </h1>
-
+          <PageHeader
+            title="Residents Management- Resident Detail"
+            subtitle="View personal information and apartment ownership. Verify and activate pending resident accounts."
+            showBack={true}
+          />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
             {/* ================= LEFT — PROFILE ================= */}
             <Card className="bg-white/40 rounded-2xl shadow-2xl border border-emerald-100">
@@ -446,6 +448,6 @@ export default function ResidentDetailPage() {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }

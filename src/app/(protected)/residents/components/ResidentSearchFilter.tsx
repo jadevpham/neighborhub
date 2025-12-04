@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ResidentSearchFilterProps } from "@/types/resident";
 import StatusSelect from "@/components/StatusSelect";
-import { formatDobForBE } from "@/utils/formatDate";
+import { toBEDate } from "@/utils/formatDate";
 const ResidentSearchFilter: React.FC<ResidentSearchFilterProps> = ({
   onFilterChange,
 }) => {
@@ -24,17 +24,15 @@ const ResidentSearchFilter: React.FC<ResidentSearchFilterProps> = ({
     onFilterChange({
       ...filters,
       registration_from: filters.registration_from
-        ? formatDobForBE(filters.registration_from)
+        ? toBEDate(filters.registration_from)
         : null,
       registration_to: filters.registration_to
-        ? formatDobForBE(filters.registration_to)
+        ? toBEDate(filters.registration_to)
         : null,
       approval_from: filters.approval_from
-        ? formatDobForBE(filters.approval_from)
+        ? toBEDate(filters.approval_from)
         : null,
-      approval_to: filters.approval_to
-        ? formatDobForBE(filters.approval_to)
-        : null,
+      approval_to: filters.approval_to ? toBEDate(filters.approval_to) : null,
     });
   };
 

@@ -9,6 +9,7 @@ import { useUserMutationCreate } from "@/hooks/useUsers";
 import { toast } from "sonner";
 import { buildCreateUserFormData } from "@/utils/buildCreateUserFormData";
 import { AxiosError } from "axios";
+import PageHeader from "@/components/PageHeader";
 const defaultUser: User = {
   user: {
     email: "",
@@ -146,24 +147,11 @@ const UserCreatePage = () => {
 
   return (
     <>
-      <div className="flex items-center gap-3 border-b border-emerald-100 pb-3 mb-6">
-        <h1 className="text-2xl font-normal text-emerald-800">
-          <button
-            onClick={() => router.push("/users")}
-            className="text-emerald-800 hover:text-emerald-600 transition-colors font-medium cursor-pointer"
-          >
-            User Management
-          </button>
-          <span className="text-emerald-800"> - </span>
-          <button
-            //onClick={() => router.refresh()} // reload lại trang hiện tại nhưng chỉ áp dụng cho server component, client component không dùng được
-            // onClick={() => window.location.reload()} // reload thật toàn trang
-            className="font-semibold text-emerald-900 hover:text-emerald-700 transition-colors cursor-pointer"
-          >
-            Create New User
-          </button>
-        </h1>
-      </div>
+      <PageHeader
+        title="Users Management - Create User"
+        subtitle="Add a new user with appropriate access rights."
+        showBack={true}
+      />
       <form
         onSubmit={handleSubmit}
         className="w-full bg-white rounded-2xl shadow-2xl border border-emerald-100 p-10"

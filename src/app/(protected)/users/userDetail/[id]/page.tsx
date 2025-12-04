@@ -12,6 +12,7 @@ import { DeleteButton } from "@/components/DeleteButton";
 import { useRouter } from "next/navigation";
 import { EditUserModal } from "../components/EditUserModal";
 import { useState } from "react";
+import PageHeader from "@/components/PageHeader";
 export default function UserDetailPage() {
   const router = useRouter(); // cho chuyển trang
   const { id } = useParams<{ id: string }>();
@@ -25,11 +26,13 @@ export default function UserDetailPage() {
   // cho đóng mở popup Edit
 
   return (
-    <div className="min-h-screen">
+    <>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-semibold text-emerald-800 mb-8">
-          User Management - User Detail
-        </h1>
+        <PageHeader
+          title="Users Management - User Detail"
+          subtitle="View full details and permissions of this user. Update user information and roles."
+          showBack={true}
+        />
         {/* <Tooltip content="Delete this user"> */}
         <DeleteButton
           ids={id}
@@ -171,6 +174,6 @@ export default function UserDetailPage() {
           </Card>
         </div>
       </div>
-    </div>
+    </>
   );
 }

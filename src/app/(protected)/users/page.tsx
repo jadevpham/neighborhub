@@ -11,6 +11,8 @@ import { Pagination } from "@/components/Pagination";
 import { queryClient } from "@/lib/queryClient";
 import { EditUserModal } from "./userDetail/components/EditUserModal";
 import { useRouter } from "next/navigation";
+import PageHeader from "@/components/PageHeader";
+
 const UsersPage = () => {
   // 1. Lấy data users để hiện list users
   // State filter local
@@ -110,10 +112,12 @@ const UsersPage = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   return (
-    <div className="p-1">
-      <h1 className="text-2xl font-semibold text-emerald-800 mb-8">
-        User Management
-      </h1>
+    <>
+      <PageHeader
+        title="Users Management - Users List"
+        subtitle="Manage all user accounts and permissions."
+        showBack={true}
+      />
       {/* Search (name, phone, email), filter status (0 - block, 1- avatar), filter (role), filter (site_id. zone_id) */}
       {isMeLoading ? (
         <p className="text-gray-500 italic mb-4">Loading user data...</p>
@@ -161,7 +165,7 @@ const UsersPage = () => {
           onSaved={() => router.refresh()}
         />
       )}
-    </div>
+    </>
   );
 };
 

@@ -8,9 +8,11 @@ import { roleColor } from "@/utils/roleColor";
 import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
 import { UserCardProps } from "@/types/user";
+import { userStatusMap } from "@/components/StatusBadge";
 const UserCard: React.FC<UserCardProps> = ({ user, onEdit }) => {
   const router = useRouter();
   const { user: u, scope: s } = user;
+  const st = userStatusMap[u.status ?? 0];
   const handleClick = () => {
     // Nếu đang ở page UserDetail thì không cần navigate
     if (
@@ -23,7 +25,14 @@ const UserCard: React.FC<UserCardProps> = ({ user, onEdit }) => {
   return (
     <div
       onClick={handleClick}
-      className={`relative max-w-sm mx-auto shadow-2xl rounded-2xl overflow-hidden text-center border text-slate-800 w-full flex flex-col justify-between cursor-pointer
+      className={`relative max-w-sm mx-auto shadow-2xl rounded-2xl overflow-hidden text-center border ${
+        st.border
+      } transition-all duration-300 hover:-translate-y-1 
+        hover:rounded-2xl 
+        hover:shadow-xl
+        ${st.hoverBorder}
+        ${st.hoverShadow}
+ text-slate-800 w-full flex flex-col justify-between cursor-pointer
      ${
        u.status === 1
          ? "bg-white/50 backdrop-blur-md border-emerald-400/40"

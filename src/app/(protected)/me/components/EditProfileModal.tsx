@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useMeMutation } from "@/hooks/useAuth";
 import { EditProfileModalProps } from "@/types/common";
 import { toast } from "sonner";
-import { buildUpdateMeFormData } from "@/utils/buildUpdateMeFormData";
-import { formatDobForBE } from "@/utils/formatDate";
+import { buildFormData } from "@/utils/buildFormData";
+import { toBEDate } from "@/utils/formatDate";
 export default function EditProfileModal({
   open,
   onClose,
@@ -32,7 +32,7 @@ export default function EditProfileModal({
       const initialValue = initialData?.[key as keyof typeof form];
       if (currentValue !== initialValue) {
         if (key === "dob" && currentValue) {
-          acc[key] = formatDobForBE(currentValue); // convert date format
+          acc[key] = toBEDate(currentValue); // convert date format
         } else {
           acc[key] = currentValue;
         }
@@ -83,7 +83,7 @@ export default function EditProfileModal({
     //   },
     // });
 
-    const payload = buildUpdateMeFormData(changedFields);
+    const payload = buildFormData(changedFields);
 
     meMutation.mutate(payload, {
       onSuccess: () => {

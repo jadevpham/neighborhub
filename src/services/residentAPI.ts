@@ -1,4 +1,3 @@
-import { MetaProps } from "@/types/common";
 import apiClient from "../lib/apiClient";
 import {
   UpdateResidentPayload,

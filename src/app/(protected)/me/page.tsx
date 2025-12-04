@@ -5,6 +5,7 @@ import { Mail, Phone, Calendar, MapPin, User, Building2 } from "lucide-react";
 import { InfoRow } from "@/components/IntoRow";
 import React, { useState } from "react";
 import EditProfileModal from "./components/EditProfileModal";
+import PageHeader from "@/components/PageHeader";
 export default function ProfilePage() {
   const { data, isLoading } = useMeQuery();
 
@@ -13,14 +14,16 @@ export default function ProfilePage() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="p-1">
+    <>
       {isLoading ? (
         <div className="text-center py-10">Loading...</div>
       ) : (
         <>
-          <h1 className="text-2xl text-emerald-900 font-semibold mb-4">
-            My Profile
-          </h1>
+          <PageHeader
+            title="Profile Management"
+            subtitle="Manage your personal information and account settings."
+            showBack={true}
+          />
           <div className="min-h-screen p-8 flex justify-center">
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 items-start">
               {/* Left profile card */}
@@ -147,6 +150,6 @@ export default function ProfilePage() {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }

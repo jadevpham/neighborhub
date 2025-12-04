@@ -81,3 +81,18 @@ export interface ConfirmOptions {
 export interface ConfirmContextType {
   openConfirm: (options: ConfirmOptions) => void;
 }
+
+export interface PageHeaderProps {
+  title: string;
+  subtitle?: string;
+  showBack?: boolean;
+  actions?: React.ReactNode; // nút bên phải
+  className?: string;
+}
+
+export interface BackButtonProps {
+  label?: string;                  // text bên cạnh icon
+  variant?: "default" | "ghost" | "pill";  
+  iconSize?: number;
+  className?: string;              // custom thêm class
+}

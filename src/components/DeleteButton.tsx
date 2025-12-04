@@ -45,7 +45,7 @@ export const DeleteButton = ({
         disabled={mutation.isPending}
         className="flex items-center gap-1 px-3 py-1.5 rounded-md 
                    text-red-600 border border-red-300 hover:bg-red-50 
-                   transition-all disabled:opacity-40"
+                   transition-all disabled:opacity-40 cursor-pointer"
       >
         <Trash2 className="w-4 h-4" />
         {mutation.isPending ? "Deleting..." : "Delete"}
