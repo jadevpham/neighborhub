@@ -12,13 +12,23 @@ import { useConfirm } from "@/components/ConfirmProvider";
 import { DeleteButton } from "@/components/DeleteButton";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useMeQuery } from "@/hooks/useAuth";
+import { canManageNews } from "@/utils/canManageNews";
+import { PencilLine } from "lucide-react";
+
 export default function NewsDetailPage() {
   const params = useParams();
   const id = params?.id as string;
   const router = useRouter();
   const { data, isLoading } = useNewsDetailQuery(id as string);
-
   const item = data?.data;
+
+  const { data: meData } = useMeQuery();
+  const role = meData?.user?.role;
+
+  const allowActions = canManageNews(role, item?.scope);
+  console.log("allowActions: ", allowActions);
+  console.log("rolee in news: ", role);
   const handleDeleted = () => {
     toast.success("News deleted successfully");
     router.push("/news"); // quay về danh sách
@@ -171,11 +181,26 @@ export default function NewsDetailPage() {
             </div>
           </div>
           {/* UPDATE + DELETE */}
-          <DeleteButton
-            ids={id}
-            resourceName="news"
-            onDeleted={handleDeleted}
-          />
+          {allowActions && (
+            <div className="flex justify-end gap-3 mt-6">
+              {/* EDIT BUTTON */}
+              <button
+                onClick={() => router.push(`/news/${id}/update`)}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-md 
+                   text-emerald-600 border border-emerald-300 hover:bg-emerald-50 
+                   transition-all disabled:opacity-40 cursor-pointer"
+              >
+                <PencilLine className="w-4 h-4" />
+                Edit
+              </button>
+              {/* DELETE */}
+              <DeleteButton
+                ids={id}
+                resourceName="news"
+                onDeleted={handleDeleted}
+              />
+            </div>
+          )}
         </div>
         {/* =============== RIGHT COLUMN (1/3) =============== */}
         <div className="lg:col-span-1 space-y-6">
