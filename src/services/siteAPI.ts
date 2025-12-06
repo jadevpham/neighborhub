@@ -1,6 +1,6 @@
 import apiClient from "@/lib/apiClient";
 import { MetaProps } from "@/types/common";
-import { SitesResponse } from "@/types/sites";
+import { SitesResponse } from "@/types/site";
 
 
 export const siteAPI = {

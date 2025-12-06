@@ -1,6 +1,6 @@
 import { MetaProps } from "./common";
-import { Site } from "./sites";
-import { Zone } from "./zones";
+import { Site } from "./site";
+import { Zone } from "./zone";
 export interface User {
   user: {
     id?: string;

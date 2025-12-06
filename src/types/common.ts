@@ -39,8 +39,8 @@ export interface PaginationProps {
 
 export interface DeletePayload {
   resource: string; // "users" | "apartments" | "sites" | ...
-  ids?: string[];    // dùng cho delete nhiều
-  residentId?: string;  // dùng cho delete apartment của resident
+  ids?: string[]; // dùng cho delete nhiều
+  residentId?: string; // dùng cho delete apartment của resident
   apartmentIds?: string[]; // dùng cho delete apartment của resident
 }
 export interface DeleteButtonProps {
@@ -91,8 +91,21 @@ export interface PageHeaderProps {
 }
 
 export interface BackButtonProps {
-  label?: string;                  // text bên cạnh icon
-  variant?: "default" | "ghost" | "pill";  
+  label?: string; // text bên cạnh icon
+  variant?: "default" | "ghost" | "pill";
   iconSize?: number;
-  className?: string;              // custom thêm class
+  className?: string; // custom thêm class
+}
+
+export interface FileAttachment {
+  attachment_id?: string;
+  url?: string | null;
+  metadata?: {
+    name?: string | null;
+    attachment_type?: number;
+    content_type?: string | null;
+    size?: string | null;
+    author_id?: string | null;
+    author_type?: string | null;
+  };
 }

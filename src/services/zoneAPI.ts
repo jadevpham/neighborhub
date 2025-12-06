@@ -1,5 +1,5 @@
 import { MetaProps } from "@/types/common";
-import { ZonesResponse } from "@/types/zones";
+import { ZonesResponse } from "@/types/zone";
 import apiClient from "../lib/apiClient";
 
 export const zoneAPI = {

@@ -1,5 +1,5 @@
 import { MetaProps } from "./common";
-import { Apartment, ZoneResident } from "./zones";
+import { Apartment, ZoneResident } from "./zone";
 export interface ResidentData {
   id?: string;
   name?: string | null;

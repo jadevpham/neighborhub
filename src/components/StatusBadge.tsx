@@ -123,6 +123,83 @@ export const newsStatusMap: Record<
   },
 };
 
+// subset dùng cho category của feedback
+export const feedbackCategoryMap: Record<
+  number | "default",
+  { label: string; color: string; border: string; shadow: string }
+> = {
+  0: {
+    label: "Complaint",
+    color: "bg-red-100 text-red-700",
+    border: "border-red-300",
+    shadow: "hover:shadow-red-300",
+  },
+  1: {
+    label: "Suggestion",
+    color: "bg-emerald-100 text-emerald-700",
+    border: "border-emerald-300",
+    shadow: "hover:shadow-emerald-300",
+  },
+  2: {
+    label: "Question",
+    color: "bg-blue-100 text-blue-700",
+    border: "border-blue-300",
+    shadow: "hover:shadow-blue-300",
+  },
+  // fallback
+  default: {
+    label: "N/A",
+    color: "bg-gray-200 text-gray-600",
+    border: "border-gray-300",
+    shadow: "hover:shadow-gray-300",
+  },
+};
+
+// subset dùng cho status của feedback
+export const feedbackStatusMap: Record<
+  number | "default",
+  { label: string; color: string }
+> = {
+  0: { label: "Draft", color: "bg-gray-200 text-gray-700" },
+  1: { label: "Unreplied", color: "bg-yellow-100 text-yellow-700" },
+  2: { label: "Replied", color: "bg-blue-100 text-blue-700" },
+  3: { label: "Deleted", color: "bg-red-200 text-red-800" },
+  // fallback
+  default: { label: "N/A", color: "bg-gray-200 text-gray-600" },
+};
+
+// subset dùng cho priority của feedback
+export const feedbackPriorityMap: Record<
+  number | "default",
+  { label: string; color: string; border: string; shadow: string }
+> = {
+  0: {
+    label: "Low",
+    color: "bg-green-100 text-green-700",
+    border: "border-green-300",
+    shadow: "hover:shadow-green-300",
+  },
+  1: {
+    label: "Medium",
+    color: "bg-yellow-100 text-yellow-700",
+    border: "border-yellow-300",
+    shadow: "hover:shadow-yellow-300",
+  },
+  2: {
+    label: "High",
+    color: "bg-red-100 text-red-700",
+    border: "border-red-300",
+    shadow: "hover:shadow-red-300",
+  },
+  // fallback
+  default: {
+    label: "N/A",
+    color: "bg-gray-200 text-gray-600",
+    border: "border-gray-300",
+    shadow: "hover:shadow-gray-300",
+  },
+};
+
 const StatusBadge: React.FC<BadgeProps> = ({ status, map }) => {
   const info = map[status];
 

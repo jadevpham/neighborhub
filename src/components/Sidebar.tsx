@@ -9,6 +9,10 @@ import {
   Calendar,
   Newspaper,
   ChevronDown,
+  Home,
+  MessageCircle,
+  CalendarCheck,
+  DoorOpen,
 } from "lucide-react";
 import clsx from "clsx";
 import { useMeQuery } from "@/hooks/useAuth";
@@ -40,6 +44,30 @@ const menu = [
     role: ["site_admin", "management_board"],
   },
   {
+    name: "Apartments",
+    href: "/apartments",
+    icon: Home, // hoặc Building, House, Apartment icon
+    role: ["site_admin", "management_board"],
+  },
+  {
+    name: "Feedbacks",
+    href: "/feedbacks",
+    icon: MessageCircle, // hoặc MessageSquare
+    role: ["site_admin", "management_board"],
+  },
+  {
+    name: "My Events",
+    href: "/my-events",
+    icon: CalendarCheck,
+    role: ["partner"],
+  },
+  {
+    name: "Facilities",
+    href: "/facilities",
+    icon: DoorOpen, // hoặc Warehouse, Building2, Boxes
+    role: ["site_admin", "management_board"],
+  },
+  {
     name: "Settings",
     href: "/settings",
     icon: Settings,
@@ -55,7 +83,7 @@ export default function Sidebar() {
   const siteName = data?.scope?.site?.name;
   const zoneName = data?.scope?.zone?.name;
 
-  const [openNewsMenu, setOpenNewsMenu] = useState(true);
+  const [openNewsMenu, setOpenNewsMenu] = useState(false);
 
   if (isLoading)
     return (
