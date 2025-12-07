@@ -200,6 +200,25 @@ export const feedbackPriorityMap: Record<
   },
 };
 
+// subset dùng cho status của facility
+export const facilityStatusMap: Record<
+  number,
+  { label: string; badge: string; border: string; shadowColor: string }
+> = {
+  0: {
+    label: "Maintenance",
+    badge: "bg-yellow-100 text-yellow-700",
+    border: "border-yellow-300",
+    shadowColor: "rgba(234, 179, 8, 0.45)", // yellow-500 alpha
+  },
+  1: {
+    label: "Active",
+    badge: "bg-green-100 text-green-700",
+    border: "border-green-300",
+    shadowColor: "rgba(34, 197, 94, 0.45)", // green-500 alpha
+  },
+};
+
 const StatusBadge: React.FC<BadgeProps> = ({ status, map }) => {
   const info = map[status];
 

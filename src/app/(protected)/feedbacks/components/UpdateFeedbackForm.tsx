@@ -40,13 +40,13 @@ export default function UpdateFeedbackForm({ feedback }: Props) {
 
   return (
     <div className="bg-white/40 p-4 rounded-2xl shadow-2xl border space-y-5">
-      <h3 className="font-semibold text-gray-800 mb-2">
+      <h3 className="font-semibold text-emerald-800 mb-2">
         Update Feedback Settings
       </h3>
 
       {/* CATEGORY */}
       <div className="flex flex-col">
-        <label className="text-sm text-gray-700 mb-1">Category</label>
+        <label className="text-sm text-emerald-600 mb-1">Category</label>
         <select
           className="border rounded-lg px-3 py-2"
           value={category ?? ""}
@@ -65,7 +65,7 @@ export default function UpdateFeedbackForm({ feedback }: Props) {
 
       {/* PRIORITY */}
       <div className="flex flex-col">
-        <label className="text-sm text-gray-700 mb-1">Priority</label>
+        <label className="text-sm text-emerald-600 mb-1">Priority</label>
         <select
           className="border rounded-lg px-3 py-2"
           value={priority ?? ""}

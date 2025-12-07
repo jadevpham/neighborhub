@@ -5,16 +5,24 @@ import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useDeleteResource } from "../hooks/useDelete";
 import { DeleteButtonProps } from "@/types/common";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const DeleteButton = ({
   ids,
   resourceName = "item",
   onDeleted,
 }: DeleteButtonProps) => {
+  const queryClient = useQueryClient();
   const [openConfirm, setOpenConfirm] = useState(false);
   const mutation = useDeleteResource();
 
   const normalizedIds = Array.isArray(ids) ? ids : [ids];
+  const resourceQueryMap: Record<string, string> = {
+    "facility-types": "facilityTypeList",
+    facilities: "facilityList",
+    users: "usersList",
+    apartments: "apartmentList",
+  };
 
   const handleDelete = async () => {
     try {
@@ -28,6 +36,21 @@ export const DeleteButton = ({
           ? `${normalizedIds.length} ${resourceName} deleted successfully`
           : `${resourceName} deleted successfully`
       );
+      // TỰ ĐỘNG XOÁ CACHE CHUNG CỦA RESOURCE
+      const queryKey = resourceQueryMap[resourceName];
+
+      if (queryKey) {
+        queryClient.setQueryData([queryKey], (oldData: any) => {
+          if (!oldData?.data) return oldData;
+
+          return {
+            ...oldData,
+            data: oldData.data.filter(
+              (x: any) => !normalizedIds.includes(x.id)
+            ),
+          };
+        });
+      }
 
       setOpenConfirm(false);
       onDeleted?.();
@@ -70,7 +93,7 @@ export const DeleteButton = ({
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setOpenConfirm(false)}
-                className="px-4 py-2 rounded-md border hover:bg-gray-100"
+                className="px-4 py-2 rounded-md border hover:bg-gray-100 cursor-pointer"
               >
                 Cancel
               </button>
@@ -79,7 +102,7 @@ export const DeleteButton = ({
                 onClick={handleDelete}
                 disabled={mutation.isPending}
                 className="px-4 py-2 rounded-md bg-red-600 text-white 
-                           hover:bg-red-700 disabled:opacity-40"
+                           hover:bg-red-700 disabled:opacity-40 cursor-pointer"
               >
                 {mutation.isPending ? "Deleting..." : "Yes, delete"}
               </button>

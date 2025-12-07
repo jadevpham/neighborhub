@@ -41,7 +41,7 @@ export default function FeedbackDetailPage() {
           <FeedbackContent fb={fb} />
           <FeedbackAttachments attachments={fb.attachments} />
           <div className="bg-white/40 p-5 rounded-2xl shadow-2xl border">
-            <h3 className="text-lg font-semibold mb-4">Responses</h3>
+            <h3 className="text-lg font-semibold mb-4 text-emerald-800">Responses</h3>
             <FeedbackResponses responses={fb.responses} />
             <FeedbackResponseForm feedbackId={id as string} />
           </div>

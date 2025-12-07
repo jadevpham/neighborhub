@@ -18,7 +18,7 @@ import FeedbackItem from "./components/FeedbackItem";
 export default function FeedbackListPage() {
   const [filters, setFilters] = useState<FeedbackParam>({
     page: 1,
-    limit: 8,
+    limit: 6,
     search: "",
     status: null,
     category: null,

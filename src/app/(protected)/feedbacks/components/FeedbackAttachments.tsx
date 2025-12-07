@@ -12,7 +12,7 @@ export default function FeedbackAttachments({
 
   return (
     <div className="bg-white/40 p-5 rounded-2xl shadow-2xl border">
-      <h3 className="text-lg font-semibold mb-4">Attachments</h3>
+      <h3 className="text-lg font-semibold mb-4 text-emerald-800">Attachments</h3>
 
       <div className="flex gap-4">
         {attachments.map((a) => (

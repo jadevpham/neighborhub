@@ -6,7 +6,7 @@ import { formatDate } from "@/utils/formatDate";
 export default function FeedbackActivityLog({ fb }: { fb: FeedbackData }) {
   return (
     <div className="bg-white/40 p-4 rounded-2xl shadow-2xl border">
-      <h3 className="font-semibold text-gray-700 mb-3">Activity Log</h3>
+      <h3 className="font-semibold text-emerald-800 mb-3">Activity Log</h3>
 
       <div className="space-y-4 text-sm">
         {fb.activity_logs?.length ? (

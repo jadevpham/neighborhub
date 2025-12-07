@@ -1,13 +1,11 @@
 "use client";
 
 import React from "react";
-import {
-  feedbackStatusMap,
-  feedbackCategoryMap,
-} from "@/components/StatusBadge";
-import { FeedbackSearchFilterProps } from "@/types/feedback";
+import { facilityStatusMap } from "@/components/StatusBadge";
+import { FacilitySearchFilterProps } from "@/types/facility";
+import { useFacilityTypeListQuery } from "@/hooks/useFacility";
 
-const FeedbackSearchFilter: React.FC<FeedbackSearchFilterProps> = ({
+const FacilitySearchFilter: React.FC<FacilitySearchFilterProps> = ({
   filters,
   onFilterChange,
 }) => {
@@ -19,7 +17,7 @@ const FeedbackSearchFilter: React.FC<FeedbackSearchFilterProps> = ({
     onFilterChange({
       ...filters,
       [name]:
-        name === "status" || name === "category"
+        name === "status" || name === "type_id"
           ? value === ""
             ? null
             : Number(value)
@@ -34,14 +32,15 @@ const FeedbackSearchFilter: React.FC<FeedbackSearchFilterProps> = ({
   const handleClear = () => {
     const cleared = {
       search: "",
-      status: null,
-      category: null,
-      page: 1,
-      limit: filters.limit || 10,
+      status: undefined,
+      type_id: "",
     };
 
     onFilterChange(cleared);
   };
+
+  const { data: typeRes } = useFacilityTypeListQuery();
+  const facilityTypes = typeRes?.data ?? [];
 
   return (
     <form
@@ -55,7 +54,7 @@ const FeedbackSearchFilter: React.FC<FeedbackSearchFilterProps> = ({
           name="search"
           value={filters.search || ""}
           onChange={handleChange}
-          placeholder="Search by title…"
+          placeholder="Search by facility name or description."
           className="border px-3 py-2 rounded-md focus:ring-2 focus:ring-emerald-500"
         />
       </div>
@@ -70,34 +69,33 @@ const FeedbackSearchFilter: React.FC<FeedbackSearchFilterProps> = ({
           className="border px-3 py-2 rounded-md"
         >
           <option value="">All</option>
-          {Object.keys(feedbackStatusMap)
-  .filter((key) => key !== "default")
-  .map((key) => (
-    <option key={key} value={key}>
-      {feedbackStatusMap[Number(key)].label}
-    </option>
-  ))}
-
+          {Object.keys(facilityStatusMap)
+            .filter((key) => key !== "default")
+            .map((key) => (
+              <option key={key} value={key}>
+                {facilityStatusMap[Number(key)].label}
+              </option>
+            ))}
         </select>
       </div>
 
-      {/* Category */}
-      <div className="flex flex-col min-w-[160px]">
-        <label className="text-sm text-gray-700 mb-1">Category</label>
+      {/* Type */}
+      <div className="flex flex-col min-w-[180px]">
+        <label className="text-sm text-gray-700 mb-1">Facility Type</label>
+
         <select
-          name="category"
-          value={filters.category ?? ""}
+          name="type_id"
+          value={filters.type_id ?? ""}
           onChange={handleChange}
           className="border px-3 py-2 rounded-md"
         >
           <option value="">All</option>
-          {Object.keys(feedbackCategoryMap)
-  .filter((key) => key !== "default")
-  .map((key) => (
-    <option key={key} value={key}>
-      {feedbackCategoryMap[Number(key)].label}
-    </option>
-  ))}
+
+          {facilityTypes.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.name}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -121,4 +119,4 @@ const FeedbackSearchFilter: React.FC<FeedbackSearchFilterProps> = ({
   );
 };
 
-export default FeedbackSearchFilter;
+export default FacilitySearchFilter;

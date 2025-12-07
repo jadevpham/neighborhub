@@ -9,11 +9,11 @@ import { formatDate } from "@/utils/formatDate";
 export default function FeedbackMeta({ fb }: { fb: FeedbackData }) {
   return (
     <div className="bg-white/40 p-4 rounded-2xl shadow-2xl border">
-      <h3 className="font-semibold text-gray-700 mb-3">Meta Information</h3>
+      <h3 className="font-semibold text-emerald-800 mb-3">Meta Information</h3>
 
       <div className="space-y-3 text-sm">
         <div className="flex items-center justify-between">
-          <p className="font-medium">Status</p>
+          <p className="font-medium text-emerald-600">Status</p>
           <span
             className={`px-2 py-1 text-xs rounded ${
               feedbackStatusMap[fb.status!].color
@@ -24,7 +24,7 @@ export default function FeedbackMeta({ fb }: { fb: FeedbackData }) {
         </div>
 
         <div className="flex items-center justify-between">
-          <p className="font-medium">Category</p>
+          <p className="font-medium text-emerald-600">Category</p>
           <span
             className={`px-2 py-1 text-xs rounded ${
               feedbackCategoryMap[fb.category ?? "default"].color
@@ -34,13 +34,13 @@ export default function FeedbackMeta({ fb }: { fb: FeedbackData }) {
           </span>
         </div>
         <div>
-          <p className="font-medium">Submitted</p>
+          <p className="font-medium text-emerald-600">Submitted</p>
           <p className="text-gray-600">{formatDate(fb.updated_at)}</p>
         </div>
         {fb.resident && (
           <>
             <div>
-              <p className="font-medium">Resident</p>
+              <p className="font-medium text-emerald-600">Resident</p>
 
               <div className="flex items-center gap-2 mt-1">
                 <img
