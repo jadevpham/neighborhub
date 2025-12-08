@@ -40,7 +40,19 @@ export const DeleteButton = ({
       const queryKey = resourceQueryMap[resourceName];
 
       if (queryKey) {
+        // CASE 1 — cache không có filters (giữ nguyên logic cũ)
         queryClient.setQueryData([queryKey], (oldData: any) => {
+          if (!oldData?.data) return oldData;
+
+          return {
+            ...oldData,
+            data: oldData.data.filter(
+              (x: any) => !normalizedIds.includes(x.id)
+            ),
+          };
+        });
+        // CASE 2 — cache có filters (NEW)
+        queryClient.setQueriesData({ queryKey: [queryKey] }, (oldData: any) => {
           if (!oldData?.data) return oldData;
 
           return {
