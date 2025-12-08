@@ -13,11 +13,15 @@ export default function FacilityCreatePage() {
 
   const createMutation = useCreateFacilityMutation();
 
+  const today = new Date().toISOString().split("T")[0];
+
   const initialValues: Partial<FacilityFormValues> = {
     type_id: typeId,
     status: 1,
-    operation_days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    installed: today,   // 👈 QUAN TRỌNG
+    operation_days: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
   };
+  
 
   const handleSubmit = (values: FacilityFormValues) => {
     createMutation.mutate({ payload: values });

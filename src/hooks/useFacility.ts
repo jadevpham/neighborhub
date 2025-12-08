@@ -8,7 +8,7 @@ import {
   FacilityFormValues,
 } from "@/types/facility";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { facilityAPI } from "@/services/facility";
+import { facilityAPI } from "@/services/facilityAPI";
 import { toast } from "sonner";
 // 1. Hook dùng cho API Get /facilities
 export function useFacilityListQuery(params: FacilityParam) {

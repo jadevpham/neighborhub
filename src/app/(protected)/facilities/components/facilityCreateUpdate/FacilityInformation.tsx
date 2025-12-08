@@ -48,9 +48,9 @@ export default function FacilityInformation({
         <label className="text-sm font-medium">Installed</label>
         <input
           type="date"
-          value={toBEDate(form.installed) || ""}
+          value={form.installed || ""}
           onChange={(e) => updateField("installed", e.target.value)}
-          className="w-full border px3 py-2 rounded-md mt-1"
+          className="w-full border px-3 py-2 rounded-md mt-1"
         />
       </div>
 
