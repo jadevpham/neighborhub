@@ -30,20 +30,27 @@ export default function LoginForm() {
           setStep("otp");
         },
 
-        onError: (err: any) => {
+        onError: (err: unknown) => {
+          // Ép kiểu an toàn, không vi phạm ESLint
+          const error = err as {
+            response?: { data?: { message?: string; error?: string } };
+            message?: string;
+          };
+        
           const message =
-            err.response?.data?.message ||
-            err.response?.data?.error ||
-            err.message ||
+            error.response?.data?.message ||
+            error.response?.data?.error ||
+            error.message ||
             "Login failed";
-
+        
           toast.error(message, {
-            duration: 5000, // hiển thị lâu hơn
+            duration: 5000,
           });
-
-          // scroll lên top để user thấy toast
+        
+          // Scroll lên top để user thấy toast
           window.scrollTo({ top: 0, behavior: "smooth" });
-        },
+        }
+        
       }
     );
   };
@@ -61,20 +68,28 @@ export default function LoginForm() {
           toast.success("Login success!");
           router.replace("/dashboard");
         },
-        onError: (err: any) => {
-          console.error("Verify 2FA error:", err.response?.data);
-
+        onError: (err: unknown) => {
+          // Ép kiểu an toàn
+          const axiosErr = err as {
+            response?: {
+              data?: {
+                message?: string;
+                error?: string;
+              };
+            };
+          };
+        
+          console.error("Verify 2FA error:", axiosErr.response?.data);
+        
           const message =
-            err.response?.data?.message ||
-            err.response?.data?.error ||
+            axiosErr.response?.data?.message ||
+            axiosErr.response?.data?.error ||
             "OTP verification failed";
-
+        
           toast.error(message, {
-            duration: 5000, // ⏳ hiển thị lâu hơn nếu bạn muốn
+            duration: 5000,
           });
-
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        },
+        }        
       }
     );
   };
