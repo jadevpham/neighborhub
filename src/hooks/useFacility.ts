@@ -5,6 +5,7 @@ import {
   FacilityData,
   FacilityTypeData,
   FacilityTypePayload,
+  FacilityFormValues,
 } from "@/types/facility";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { facilityAPI } from "@/services/facility";
@@ -39,6 +40,23 @@ export function useFacilityTypeDetailQuery(id: string | null) {
 }
 
 // 5. Hook dùng cho API Post /facilities
+export function useCreateFacilityMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ payload }: { payload: FacilityFormValues  }) =>
+      facilityAPI.createFacility(payload),
+
+    onSuccess: () => {
+      toast.success("Facility created successfully!");
+      queryClient.invalidateQueries({ queryKey: ["FacilityDetail"] });
+    },
+
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || "Failed to create facility");
+    },
+  });
+}
 
 // 6. Hook dùng cho API Post /facility-types
 export function useCreateFacilityTypeMutation() {

@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import PageHeader from "@/components/PageHeader";
-import FacilitySearchFilter from "./components/FacilitySearchFilter";
-import FacilityTypeDetailPanel from "./components/FacilityTypeDetailPanel";
+import FacilitySearchFilter from "./components/facilityList/FacilitySearchFilter";
+import FacilityTypeDetailPanel from "./components/facilityList/FacilityTypeDetailPanel";
 import {
   useFacilityListQuery,
   useFacilityTypeDetailQuery,
@@ -17,9 +17,9 @@ import {
   FacilityTypeData,
 } from "@/types/facility";
 
-import FacilityColumn from "./components/FacilityColumn";
-import AddListButton from "./components/AddListButton";
-import FacilityTypeModalPopup from "./components/FacilityTypeModalPopup";
+import FacilityColumn from "./components/facilityList/FacilityColumn";
+import AddListButton from "./components/facilityList/AddListButton";
+import FacilityTypeModalPopup from "./components/facilityList/FacilityTypeModalPopup";
 
 export default function FacilityListPage() {
   const [filters, setFilters] = useState<FacilityParam>({

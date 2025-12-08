@@ -6,7 +6,7 @@ import {
 } from "@/types/facility";
 import { Pencil, Plus } from "lucide-react";
 import { DeleteButton } from "@/components/DeleteButton";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 export default function FacilityColumn({
   type,
@@ -17,8 +17,9 @@ export default function FacilityColumn({
   const params = useParams();
   const id = params?.id as string;
   const handleDeleted = () => {
-    toast.success("Facility type deleted successfully");
+    toast.success("Facility Type deleted successfully");
   };
+  const router = useRouter();
   return (
     <div className="flex flex-col min-w-[270px] relative">
       {/* HEADER */}
@@ -56,7 +57,10 @@ export default function FacilityColumn({
           <FacilityCard key={item.id} item={item} />
         ))}
 
-        <button className="flex items-center gap-2 text-gray-600 mt-1 hover:text-black cursor-pointer">
+<button
+          onClick={() => router.push(`/facilities/create?type_id=${type.id}`)}
+          className="flex items-center gap-2 text-gray-600 mt-1 hover:text-black cursor-pointer"
+        >
           <Plus className="w-4 h-4" /> Add Facility
         </button>
       </div>

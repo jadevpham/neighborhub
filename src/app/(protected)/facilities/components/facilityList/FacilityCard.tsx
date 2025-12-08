@@ -12,8 +12,7 @@ export default function FacilityCard({ item }: { item: FacilityData }) {
 
   const [hovered, setHovered] = useState(false);
   const handleDeleted = () => {
-    toast.success("Feedback deleted successfully");
-    // router.push("/news"); // quay về danh sách
+    toast.success("Facility deleted successfully");
   };
   return (
     <div

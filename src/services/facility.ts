@@ -3,8 +3,10 @@ import {
   FacilityListResponse,
   FacilityTypeListResponse,
   FacilityData,
+  FacilityFormValues,
 } from "@/types/facility";
 import apiClient from "../lib/apiClient";
+import { buildFormData } from "@/utils/buildFormData";
 export const facilityAPI = {
   // 1. API Get /facilities
   facilityList: async (
@@ -33,6 +35,13 @@ export const facilityAPI = {
   },
 
   // 5. API Post /facilities
+  createFacility: async (payload: FacilityFormValues) => {
+    const formData = buildFormData(payload);
+    const response = await apiClient.post("/facilities", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  },
 
   // 6. API Post /facility-types
   createFacilityType: async (payload: { name: string }) => {
