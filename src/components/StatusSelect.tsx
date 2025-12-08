@@ -14,14 +14,14 @@ const StatusSelect: React.FC<StatusSelectProps> = ({
   const fullEntries = Object.entries(map).map(([key, v]) => ({
     value: Number(key),
     label: v.label,
-    color: v.color,
+    color: "color" in v ? v.color : "",
   }));
 
   const entries = allowedStatuses
     ? allowedStatuses.map((s) => ({
         value: s,
         label: map[s].label,
-        color: map[s].color,
+        color: "color" in map[s] ? map[s].color : "",
       }))
     : fullEntries;
 
