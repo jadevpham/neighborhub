@@ -1,7 +1,7 @@
 import { number } from "framer-motion";
 import { Site } from "./site";
 import { Zone } from "./zone";
-import { File } from "./common";
+import { FileAttachment } from "./common";
 
 export interface UserBy {
     id?: string;
@@ -40,7 +40,7 @@ export interface EventData {
     approval_status?: number; // Enum
 
     
-    attachments?: File[];
+    attachments?: FileAttachment[];
     max_participants?: number;
     
 }
