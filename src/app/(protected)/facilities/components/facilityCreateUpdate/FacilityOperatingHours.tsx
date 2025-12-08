@@ -21,7 +21,7 @@ export default function FacilityOperatingHours({
   };
 
   return (
-    <div className="border rounded-xl p-4 bg-white shadow-sm">
+    <div className="border rounded-2xl p-4 bg-white/40 shadow-2xl">
       <h3 className="font-semibold text-base mb-3">Operating Hours</h3>
 
       {/* Opening / Closing */}

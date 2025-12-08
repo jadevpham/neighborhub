@@ -4,6 +4,7 @@ export interface FacilityData {
   description?: string | null;
   status?: number | null;
   type?: string | null; // là facility type name
+  type_id?: string | null;
   img?: string | null;
 }
 

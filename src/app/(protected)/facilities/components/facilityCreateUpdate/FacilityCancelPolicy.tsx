@@ -16,7 +16,7 @@ export default function FacilityCancelPolicy({
   const isBanType = form.penalty_type === 0;
 
   return (
-    <div className="border rounded-xl p-4 bg-white shadow-sm">
+    <div className="border rounded-2xl p-4 bg-white/40 shadow-2xl">
       <h3 className="font-semibold text-base mb-3">Cancellation Policy</h3>
 
       <div className="space-y-3">

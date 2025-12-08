@@ -76,8 +76,10 @@ export interface NewsParam extends MetaProps {
   status?: number;
   created_from?: string | null;
   created_to?: string | null;
+  scope?: string | null;
+  site_id?: string | null;
+  zone_id?: string | null;
 }
-
 
 export interface NewsReactionProps {
   reactions?: NewsData["reactions"];

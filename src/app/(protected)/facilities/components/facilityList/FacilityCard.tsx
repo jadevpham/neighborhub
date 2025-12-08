@@ -4,7 +4,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { facilityStatusMap } from "@/components/StatusBadge";
 import { DeleteButton } from "@/components/DeleteButton";
 import { toast } from "sonner";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 export default function FacilityCard({ item }: { item: FacilityData }) {
   const params = useParams();
   const id = params?.id as string;
@@ -14,6 +14,7 @@ export default function FacilityCard({ item }: { item: FacilityData }) {
   const handleDeleted = () => {
     toast.success("Facility deleted successfully");
   };
+  const router = useRouter();
   return (
     <div
       className={`group/card relative rounded-2xl overflow-hidden cursor-pointer border bg-white transition-all duration-300 ${
@@ -51,11 +52,12 @@ export default function FacilityCard({ item }: { item: FacilityData }) {
       </div>
       {/* ACTION ICONS */}
       <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover/card:opacity-100 transition-all duration-300">
-        <button className="p-1 bg-white rounded-full shadow cursor-pointer">
+        <button className="p-1 bg-white rounded-full shadow cursor-pointer" 
+      onClick={() => router.push(`/facilities/${item.id}`)}>
           <Pencil className="w-4 h-4" />
         </button>
         <DeleteButton
-          ids={id}
+          ids={item.id!}
           resourceName="facilities"
           onDeleted={handleDeleted}
         />

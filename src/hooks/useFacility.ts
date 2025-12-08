@@ -29,6 +29,13 @@ export function useFacilityTypeListQuery() {
 }
 
 // 3. Hook dùng cho API Get /facilities/:id
+export function useFacilityDetailQuery(id: string | null) {
+  return useQuery({
+    queryKey: ["facilityDetail", id],
+    queryFn: () => facilityAPI.facilityDetail(id!),
+    enabled: !!id, // chỉ chạy nếu có id
+  });
+}
 
 // 4. Hook dùng cho API Get /facility-types/:id
 export function useFacilityTypeDetailQuery(id: string | null) {
@@ -44,7 +51,7 @@ export function useCreateFacilityMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ payload }: { payload: FacilityFormValues  }) =>
+    mutationFn: ({ payload }: { payload: FacilityFormValues }) =>
       facilityAPI.createFacility(payload),
 
     onSuccess: () => {
@@ -81,15 +88,47 @@ export function useCreateFacilityTypeMutation() {
         };
       });
     },
-    onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message || "Failed to create facility type"
-      );
+    onError: (err) => {
+      const apiErr = err?.response?.data;
+
+      // CASE 1: BE validation errors
+      if (apiErr?.errors) {
+        for (const key in apiErr.errors) {
+          apiErr.errors[key].forEach((msg: string) => toast.error(msg));
+        }
+        return;
+      }
+
+      // CASE 2: BE message
+      if (apiErr?.message) {
+        toast.error(apiErr.message);
+        return;
+      }
+
+      // CASE 3: fallback
+      toast.error("Failed to create facility");
     },
   });
 }
 
 // 7. Hook dùng cho API Patch /facilities/:id
+export function useUpdateFacilityMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({id, payload }: {id: string, payload: FacilityFormValues }) =>
+      facilityAPI.updateFacility(id, payload),
+
+    onSuccess: () => {
+      toast.success("Facility updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["FacilityDetail"] });
+    },
+
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || "Failed to updated facility");
+    },
+  });
+}
 
 // 8. Hook dùng cho API Patch /facility-types/:id
 export function useUpdateFacilityTypeMutation() {

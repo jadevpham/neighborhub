@@ -30,7 +30,7 @@ export default function FacilityCreatePage() {
   return (
     <>
       <PageHeader
-        title="Create New Facility"
+        title="Facility Management - Create New Facility"
         subtitle="Add a new facility under this category and setting booking rules."
         showBack={true}
       />

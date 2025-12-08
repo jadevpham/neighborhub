@@ -91,30 +91,36 @@ export default function FacilityForm({
 
   return (
     <div className="w-full max-w-6xl mx-auto pb-24 space-y-6">
-      {/* Photos */}
-      <FacilityPhotos
+              {/* Photos */}
+
+
+{/* MAIN FORM CONTENT */}
+<div className="space-y-8">
+
+  {/* 1️⃣ INFORMATION BLOCK — full width */}
+  <FacilityInformation
+    form={form}
+    updateField={updateField}
+    isUpdate={mode === "update"}
+  />
+
+  {/* 2️⃣ CONFIG BLOCKS — chia 2 cột */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <FacilityOperatingHours form={form} updateField={updateField} />
+    <FacilitySlotSettings form={form} updateField={updateField} />
+    <FacilityBookingRules form={form} updateField={updateField} />
+    <FacilityCancelPolicy form={form} updateField={updateField} />
+    <FacilityFeesDeposit form={form} updateField={updateField} />
+    <FacilityPhotos
         images={form.img}
         onChange={(imgs) => updateField("img", imgs)}
       />
+  </div>
 
-      {/* MAIN GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* LEFT: Information */}
-        <FacilityInformation
-          form={form}
-          updateField={updateField}
-          isUpdate={mode === "update"}
-        />
+</div>
 
-        {/* RIGHT: All config blocks */}
-        <div className="flex flex-col gap-4">
-          <FacilityOperatingHours form={form} updateField={updateField} />
-          <FacilitySlotSettings form={form} updateField={updateField} />
-          <FacilityBookingRules form={form} updateField={updateField} />
-          <FacilityCancelPolicy form={form} updateField={updateField} />
-          <FacilityFeesDeposit form={form} updateField={updateField} />
-        </div>
-      </div>
+
+
 
       {/* Submit bar */}
       <FacilitySubmitBar mode={mode} loading={loading} onSubmit={handleSubmit} />

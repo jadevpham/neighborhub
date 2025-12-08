@@ -20,7 +20,6 @@ export interface Apartment {
     apartment_ownership_certificate: any[] | null;
   };
   resident_type?: number;
-  status_appartment?: number;  //BE sai chính tả status_apartment
   status_apartment?: number;
   reject_reason?: string | null;
 }

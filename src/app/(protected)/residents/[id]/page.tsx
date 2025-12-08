@@ -295,7 +295,7 @@ export default function ResidentDetailPage() {
                             </TableCell>
                             <TableCell>
                               <StatusBadge
-                                status={apt.status_appartment}
+                                status={apt.status_apartment}
                                 map={residentStatusMap}
                               />
                             </TableCell>
@@ -304,7 +304,7 @@ export default function ResidentDetailPage() {
                             <TableCell>
                               <div className="flex items-center justify-center gap-2 text-center w-full">
                                 {residentAppovalStatusMap[
-                                  apt.status_appartment
+                                  apt.status_apartment
                                 ]?.map((btn, idx) => (
                                   <Button
                                     key={idx}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import PageHeader from "@/components/PageHeader";
 import FacilitySearchFilter from "./FacilitySearchFilter";
 import FacilityTypeDetailPanel from "./FacilityTypeDetailPanel";
@@ -53,6 +53,30 @@ export default function FacilityListPage() {
   const [editType, setEditType] = useState<FacilityTypeData | null>(null);
   const updateMutation = useUpdateFacilityTypeMutation();
 
+  // ============================
+  // AUTO SCROLL TO TYPE COLUMN
+  // ============================
+
+  // Ref cho container scroll ngang
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Tạo ref cho từng Facility Type
+  const typeRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  useEffect(() => {
+    if (!filters.type_id) return;
+
+    const targetRef = typeRefs.current[filters.type_id];
+    const container = scrollContainerRef.current;
+
+    if (targetRef && container) {
+      container.scrollTo({
+        left: targetRef.offsetLeft - 40,
+        behavior: "smooth",
+      });
+    }
+  }, [filters.type_id, facilityTypes]);
+
   return (
     <>
       <PageHeader
@@ -67,19 +91,30 @@ export default function FacilityListPage() {
       />
 
       {/* MAIN LIST */}
-      <div className="flex items-start gap-8 overflow-x-auto pb-6 pt-4">
+      <div
+        ref={scrollContainerRef}
+        className="flex items-start gap-8 overflow-x-auto pb-6 pt-4"
+      >
         {facilityTypes.map((type) => (
-          <FacilityColumn
-            key={type.id}
-            type={type}
-            items={grouped[type.name!] ?? []}
-            onShowDetail={() => setSelectedTypeId(type.id!)}
-            onEdit={(t) => setEditType(t)}
-          />
+          <div
+  key={type.id}
+  ref={(el) => {
+    typeRefs.current[type.id!] = el;
+  }}
+>
+            <FacilityColumn
+              type={type}
+              items={grouped[type.name!] ?? []}
+              onShowDetail={() => setSelectedTypeId(type.id!)}
+              onEdit={(t) => setEditType(t)}
+            />
+          </div>
         ))}
 
         <AddListButton onCreated={(t) => setSelectedTypeId(t.id!)} />
       </div>
+
+      {/* Update Modal */}
       <FacilityTypeModalPopup
         open={!!editType}
         title="Update Facility Type"
@@ -93,9 +128,7 @@ export default function FacilityListPage() {
               name: newName,
             },
             {
-              onSuccess: () => {
-                setEditType(null); // <-- ĐÓNG POPUP Ở ĐÂY
-              },
+              onSuccess: () => setEditType(null),
             }
           )
         }
