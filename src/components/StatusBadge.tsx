@@ -1,5 +1,7 @@
 // components/StatusBadge.tsx
 import { BadgeProps } from "@/types/common";
+import { BookingSlotAction } from "@/types/bookingSlot";
+import { EventStatus } from "@/types/event";
 
 // subset dùng cho UserSearchFilter
 export const userStatusMap: Record<
@@ -216,6 +218,127 @@ export const facilityStatusMap: Record<
     badge: "bg-green-100 text-green-700",
     border: "border-green-300",
     shadowColor: "rgba(34, 197, 94, 0.45)", // green-500 alpha
+  },
+};
+
+// subset dùng cho status của booing-slot
+export const bookingSlotStatusMap: Record<
+  number | any,
+  { label: string; color: string }
+> = {
+  0: {
+    label: "Blocked",
+    color: "bg-gray-200 text-gray-800 border-gray-300",
+  },
+  1: {
+    label: "Booked by Resident",
+    color: "bg-blue-100 text-blue-800 border-blue-300",
+  },
+  2: {
+    label: "Booked by SAMB",
+    color: "bg-purple-100 text-purple-800 border-purple-300",
+  },
+  3: {
+    label: "Cancelled by Resident",
+    color: "bg-red-100 text-red-800 border-red-300",
+  },
+  4: {
+    label: "Cancelled by SAMB",
+    color: "bg-orange-100 text-orange-800 border-orange-300",
+  },
+} as const;
+
+// subset dùng cho action của booing-slot history
+export const bookingSlotHistoryActionMap: Record<
+  BookingSlotAction,
+  {
+    label: string;
+    color: string;
+    icon: string;
+  }
+> = {
+  booked_by_resident: {
+    label: "Booked by resident",
+    color: "bg-green-100 text-green-700",
+    icon: "🟢",
+  },
+  cancelled_by_resident: {
+    label: "Cancelled by resident",
+    color: "bg-red-100 text-red-700",
+    icon: "🔴",
+  },
+  blocked_by_samb: {
+    label: "Blocked by admin",
+    color: "bg-gray-200 text-gray-700",
+    icon: "⛔",
+  },
+  unblocked_by_samb: {
+    label: "Unblocked by admin",
+    color: "bg-blue-100 text-blue-700",
+    icon: "🔓",
+  },
+  booked_by_samb: {
+    label: "Booked by admin",
+    color: "bg-blue-100 text-blue-700",
+    icon: "🛡️",
+  },
+  cancelled_by_samb: {
+    label: "Cancelled by admin",
+    color: "bg-orange-100 text-orange-700",
+    icon: "⚠️",
+  },
+};
+
+// subset dùng cho status của event
+export const eventStatusMap: Record<
+  EventStatus,
+  {
+    label: string;
+    badge: string;
+    border?: string;
+    hover?: string;
+  }
+> = {
+  [EventStatus.Draft]: {
+    label: "Draft",
+    badge: "bg-gray-100 text-gray-700",
+    border: "border-gray-200",
+    hover: "hover:shadow-gray-50 hover:bg-gray-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-gray-300/40",
+  },
+
+  [EventStatus.Pending]: {
+    label: "Pending",
+    badge: "bg-yellow-100 text-yellow-800",
+    border: "border-yellow-200",
+    hover: "hover:shadow-yellow-50 hover:bg-yellow-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-yellow-300/40",
+  },
+
+  [EventStatus.Rejected]: {
+    label: "Rejected",
+    badge: "bg-red-100 text-red-800",
+    border: "border-red-200",
+    hover: "hover:shadow-red-50 hover:bg-red-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-red-300/40",
+  },
+
+  [EventStatus.Active]: {
+    label: "Active",
+    badge: "bg-green-100 text-green-800",
+    border: "border-green-200",
+    hover: "hover:shadow-green-50 hover:bg-green-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-green-300/40",
+  },
+
+  [EventStatus.Cancelled]: {
+    label: "Cancelled",
+    badge: "bg-orange-100 text-orange-800",
+    border: "border-orange-200",
+    hover: "hover:shadow-orange-50 hover:bg-orange-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-orange-300/40",
+  },
+
+  [EventStatus.Deleted]: {
+    label: "Deleted",
+    badge: "bg-gray-300 text-gray-600",
+    border: "border-gray-300",
+    hover: "hover:shadow-gray-50 hover:bg-gray-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-gray-300/40",
   },
 };
 

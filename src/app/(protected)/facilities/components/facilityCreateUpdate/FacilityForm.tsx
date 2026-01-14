@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  FacilityFormValues,
-  UpdateFacilityFieldFn,
-} from "@/types/facility";
+import { FacilityFormValues, UpdateFacilityFieldFn } from "@/types/facility";
 
 import FacilityPhotos from "./FacilityPhotos";
 import FacilityInformation from "./FacilityInformation";
@@ -14,13 +11,7 @@ import FacilityBookingRules from "./FacilityBookingRules";
 import FacilityCancelPolicy from "./FacilityCancelPolicy";
 import FacilityFeesDeposit from "./FacilityFeesDeposit";
 import FacilitySubmitBar from "./FacilitySubmitBar";
-
-interface FacilityFormProps {
-  mode: "create" | "update";
-  initialValues?: Partial<FacilityFormValues>;
-  loading?: boolean;
-  onSubmit: (values: FacilityFormValues) => void;
-}
+import { FacilityFormProps } from "@/types/facility";
 
 const defaultForm: FacilityFormValues = {
   name: "",
@@ -59,6 +50,7 @@ export default function FacilityForm({
   initialValues,
   loading = false,
   onSubmit,
+  facilityId,
 }: FacilityFormProps) {
   const [form, setForm] = useState<FacilityFormValues>({
     ...defaultForm,
@@ -68,12 +60,11 @@ export default function FacilityForm({
   // Nếu initialValues thay đổi (update), sync lại form
   useEffect(() => {
     if (initialValues) {
-        setForm((prev) => ({
-            ...prev,
-            ...initialValues,
-            type_id: initialValues?.type_id ?? prev.type_id,
-          }));
-          
+      setForm((prev) => ({
+        ...prev,
+        ...initialValues,
+        type_id: initialValues?.type_id ?? prev.type_id,
+      }));
     }
   }, [initialValues]);
 
@@ -91,39 +82,38 @@ export default function FacilityForm({
 
   return (
     <div className="w-full max-w-6xl mx-auto pb-24 space-y-6">
-              {/* Photos */}
+      {/* Photos */}
 
+      {/* MAIN FORM CONTENT */}
+      <div className="space-y-8">
+        {/* 1️. INFORMATION BLOCK — full width */}
+        <FacilityInformation
+          form={form}
+          updateField={updateField}
+          isUpdate={mode === "update"}
+        />
 
-{/* MAIN FORM CONTENT */}
-<div className="space-y-8">
+        {/* 2. CONFIG BLOCKS — chia 2 cột */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FacilityOperatingHours form={form} updateField={updateField} />
+          <FacilitySlotSettings form={form} updateField={updateField} />
+          <FacilityBookingRules form={form} updateField={updateField} />
+          <FacilityCancelPolicy form={form} updateField={updateField} />
+          <FacilityFeesDeposit form={form} updateField={updateField} />
+          <FacilityPhotos
+            images={form.img}
+            onChange={(imgs) => updateField("img", imgs)}
+          />
+        </div>
+      </div>
 
-  {/* 1️⃣ INFORMATION BLOCK — full width */}
-  <FacilityInformation
-    form={form}
-    updateField={updateField}
-    isUpdate={mode === "update"}
-  />
-
-  {/* 2️⃣ CONFIG BLOCKS — chia 2 cột */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <FacilityOperatingHours form={form} updateField={updateField} />
-    <FacilitySlotSettings form={form} updateField={updateField} />
-    <FacilityBookingRules form={form} updateField={updateField} />
-    <FacilityCancelPolicy form={form} updateField={updateField} />
-    <FacilityFeesDeposit form={form} updateField={updateField} />
-    <FacilityPhotos
-        images={form.img}
-        onChange={(imgs) => updateField("img", imgs)}
+      {/* 3. Submit bar */}
+      <FacilitySubmitBar
+        mode={mode}
+        loading={loading}
+        onSubmit={handleSubmit}
+        facilityId={facilityId}
       />
-  </div>
-
-</div>
-
-
-
-
-      {/* Submit bar */}
-      <FacilitySubmitBar mode={mode} loading={loading} onSubmit={handleSubmit} />
     </div>
   );
 }

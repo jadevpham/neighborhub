@@ -1,45 +1,6 @@
 // A. Hàm hỗ trợ FE hiển thị đúng kiểu ngày giờ mong muốn vì BE trả về date, date-time,
 //  dạng chưa đẹp/chưa tách date và time, chưa chuyển về giờ local => hàm này sẽ hỗ trợ hiển thị đúng đẹp,
 //  tách date và đúng giờ local chứ không phải giờ quốc tế
-// export function formatDate(dateString?: string | null) {
-//   if (!dateString) return "—";
-
-//   // Match kiểu: 04-12-2025T19:18:32Z hoặc không có Z
-//   const match = dateString.match(
-//     /^(\d{2})-(\d{2})-(\d{4})T(\d{2}):(\d{2}):(\d{2})Z?$/
-//   );
-
-//   if (!match) {
-//     // Nếu format không đúng thì trả lại chuỗi gốc để khỏi bị NaN
-//     return dateString;
-//   }
-
-//   const [, dd, mm, yyyy, HH, MM, SS] = match;
-
-//   // Tạo Date theo UTC (vì BE đang gửi Z = UTC)
-//   const utcDate = new Date(
-//     Date.UTC(
-//       Number(yyyy),
-//       Number(mm) - 1,
-//       Number(dd),
-//       Number(HH),
-//       Number(MM),
-//       Number(SS)
-//     )
-//   );
-
-//   // Lấy theo LOCAL TIME của user
-//   const d = utcDate.getDate().toString().padStart(2, "0");
-//   const m = (utcDate.getMonth() + 1).toString().padStart(2, "0");
-//   const y = utcDate.getFullYear();
-
-//   const h = utcDate.getHours().toString().padStart(2, "0");
-//   const mi = utcDate.getMinutes().toString().padStart(2, "0");
-//   const s = utcDate.getSeconds().toString().padStart(2, "0");
-
-//   return `${d}-${m}-${y} ${h}:${mi}:${s}`;
-// }
-
 export function formatDate(dateString?: string | null) {
   if (!dateString) return "—";
 
@@ -85,7 +46,6 @@ export function formatDate(dateString?: string | null) {
 
   return `${d}-${m}-${y} ${hh}:${mi}:${ss}`;
 }
-
 
 // B. Hàm hỗ trợ FE gửi date, date-time cho BE đúng format BE yêu cầu
 // Helper: chuyển mọi kiểu input về Date

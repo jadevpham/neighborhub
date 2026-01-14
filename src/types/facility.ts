@@ -117,13 +117,13 @@ export interface FacilityFormValues {
 
   type_id: string; // lấy từ context type
 
-  status: number; // 0 - maintenance, 1 - active
+  status: number; // 0 - maintenance, 1 - active. // Status của facility. Lưu ý khi 1 facility đang active mà chuyển về maintenance thì SA, MB phải vào booking slot cancel tất cả những slot đã booking rồi mới chuyển về maintanance
   installed: string; // yyyy-MM-dd
 
   // Operating Hours
-  opening_time: string;       // "HH:mm"
-  closing_time: string;       // "HH:mm"
-  operation_days: string[];   // ["Mon", "Tue", ...]
+  opening_time: string; // "HH:mm"
+  closing_time: string; // "HH:mm"
+  operation_days: string[]; // ["Mon", "Tue", ...]
 
   // Slot Settings
   slot_length_minutes: number;
@@ -137,14 +137,14 @@ export interface FacilityFormValues {
   // Cancel Policy
   deadline_hours_before: number;
   max_cancel_per_week: number;
-  penalty_type: number;            // 0..3
+  penalty_type: number; // 0..3
   ban_duration_days: number | null;
   late_cancel_refund_rate: number; // 0–1
 
   // Fee
   booking_fee_vnd: number;
-  refund_policy: number;           // 0..2
-  refund_rate: number;             // 0–1
+  refund_policy: number; // 0..2
+  refund_rate: number; // 0–1
 }
 
 // Hàm update field type-safe
@@ -164,6 +164,7 @@ export interface FacilitySubmitBarProps {
   mode: "create" | "update";
   loading: boolean;
   onSubmit: () => void;
+  facilityId?: string;
 }
 
 // Photos
@@ -179,4 +180,10 @@ export interface FacilityInformationProps {
   isUpdate?: boolean;
 }
 
-
+export interface FacilityFormProps {
+  mode: "create" | "update";
+  initialValues?: Partial<FacilityFormValues>;
+  loading?: boolean;
+  onSubmit: (values: FacilityFormValues) => void;
+  facilityId?: string;
+}

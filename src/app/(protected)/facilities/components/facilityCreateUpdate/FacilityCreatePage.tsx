@@ -18,7 +18,7 @@ export default function FacilityCreatePage() {
   const initialValues: Partial<FacilityFormValues> = {
     type_id: typeId,
     status: 1,
-    installed: today,   // 👈 QUAN TRỌNG
+    installed: today,  
     operation_days: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
   };
   

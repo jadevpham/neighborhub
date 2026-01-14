@@ -97,11 +97,11 @@ export default function FacilityListPage() {
       >
         {facilityTypes.map((type) => (
           <div
-  key={type.id}
-  ref={(el) => {
-    typeRefs.current[type.id!] = el;
-  }}
->
+            key={type.id}
+            ref={(el) => {
+              typeRefs.current[type.id!] = el;
+            }}
+          >
             <FacilityColumn
               type={type}
               items={grouped[type.name!] ?? []}

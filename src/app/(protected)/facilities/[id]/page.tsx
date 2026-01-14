@@ -65,6 +65,7 @@ export default function FacilityDetailPage() {
         initialValues={initialValues}
         loading={updateMutation.isPending}
         onSubmit={handleSubmit}
+        facilityId={facilityId} 
       />
     </>
   );
