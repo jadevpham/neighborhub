@@ -13,6 +13,7 @@ import {
   MessageCircle,
   CalendarCheck,
   DoorOpen,
+  Vote,
 } from "lucide-react";
 import clsx from "clsx";
 import { useMeQuery } from "@/hooks/useAuth";
@@ -23,7 +24,7 @@ const menu = [
     name: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    role: ["system_admin", "site_admin", "management_board", "partner"],
+    role: ["system_admin", "site_admin", "management_board"],
   },
   {
     name: "Users",
@@ -41,30 +42,36 @@ const menu = [
     name: "Events",
     href: "/events",
     icon: Calendar,
-    role: ["site_admin", "management_board"],
+    role: ["site_admin", "management_board", "partner"],
   },
   {
     name: "Apartments",
     href: "/apartments",
-    icon: Home, // hoặc Building, House, Apartment icon
+    icon: Home, 
     role: ["site_admin", "management_board"],
   },
   {
     name: "Feedbacks",
     href: "/feedbacks",
-    icon: MessageCircle, // hoặc MessageSquare
+    icon: MessageCircle, 
     role: ["site_admin", "management_board"],
   },
-  {
-    name: "My Events",
-    href: "/my-events",
-    icon: CalendarCheck,
-    role: ["partner"],
-  },
+  // {
+  //   name: "My Events",
+  //   href: "/my-events",
+  //   icon: CalendarCheck,
+  //   role: ["partner"],
+  // },
   {
     name: "Facilities",
     href: "/facilities",
-    icon: DoorOpen, // hoặc Warehouse, Building2, Boxes
+    icon: DoorOpen, 
+    role: ["site_admin", "management_board"],
+  },
+  {
+    name: "Referendums", 
+    href: "/referendums",
+    icon: Vote,
     role: ["site_admin", "management_board"],
   },
   {

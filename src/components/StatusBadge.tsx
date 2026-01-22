@@ -1,8 +1,8 @@
 // components/StatusBadge.tsx
 import { BadgeProps } from "@/types/common";
 import { BookingSlotAction } from "@/types/bookingSlot";
-import { EventStatus } from "@/types/event";
-
+import { EventStatus, TicketType } from "@/types/event";
+import { ReferendumStatus } from "@/types/referendum";
 // subset dùng cho UserSearchFilter
 export const userStatusMap: Record<
   number,
@@ -327,6 +327,13 @@ export const eventStatusMap: Record<
     hover: "hover:shadow-green-50 hover:bg-green-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-green-300/40",
   },
 
+  [EventStatus.PendingCancellation]: {
+    label: "Pending Cancellation",
+    badge: "bg-amber-100 text-amber-800",
+    border: "border-amber-200",
+    hover: "hover:shadow-amber-50 hover:bg-amber-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-amber-300/40",
+  },
+  
   [EventStatus.Cancelled]: {
     label: "Cancelled",
     badge: "bg-orange-100 text-orange-800",
@@ -341,6 +348,89 @@ export const eventStatusMap: Record<
     hover: "hover:shadow-gray-50 hover:bg-gray-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-gray-300/40",
   },
 };
+
+export const ticketTypeMap: Record<TicketType, string> = {
+  [TicketType.PAID]: "Paid",
+  [TicketType.FREE]: "Free",
+  [TicketType.THIRD_PARTY]: "Third-party",
+  [TicketType.AT_DOOR]: "At door",
+};
+
+export const EventActionConfig = (status: EventStatus) => {
+  switch (status) {
+    case EventStatus.Draft:
+      return {
+        type: "publish",
+        label: "Publish",
+        color: "emerald",
+        canDelete: true,
+      };
+
+    case EventStatus.Pending:
+      return {
+        type: "review",
+        approveLabel: "Approve",
+        rejectLabel: "Reject",
+      };
+
+    case EventStatus.Active:
+      return {
+        type: "cancel-request", // ✅ QUAN TRỌNG
+        label: "Cancel Request",
+        color: "orange",
+      };
+
+    case EventStatus.PendingCancellation:
+      return {
+        type: "finalize-cancel",
+        label: "Finalize Cancel",
+        color: "orange",
+      };
+
+    default:
+      return null;
+  }
+};
+
+// 
+
+export const referendumStatusMap: Record<
+  ReferendumStatus | "unknown",
+  {
+    label: string;
+    badge: string;
+    border?: string;
+    hover?: string;
+  }
+> = {
+  [ReferendumStatus.Delete]: {
+    label: "Delete",
+    badge: "bg-gray-100 text-gray-700",
+    border: "border-gray-200",
+    hover: "hover:shadow-gray-50 hover:bg-gray-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-gray-300/40",
+  },
+
+  [ReferendumStatus.Closed]: {
+    label: "Closed",
+    badge: "bg-red-100 text-red-800",
+    border: "border-red-200",
+    hover: "hover:shadow-red-50 hover:bg-red-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-red-300/40",
+  },
+
+  [ReferendumStatus.Active]: {
+    label: "Active",
+    badge: "bg-green-100 text-green-800",
+    border: "border-green-200",
+    hover: "hover:shadow-green-50 hover:bg-green-50 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] hover:ring-2 hover:ring-green-300/40",
+  },
+  unknown: {
+    label: "Unknown",
+    badge: "bg-gray-50 text-gray-400",
+    border: "border-gray-100",
+    hover: "",
+  },
+};
+
 
 const StatusBadge: React.FC<BadgeProps> = ({ status, map }) => {
   const info = map[status];

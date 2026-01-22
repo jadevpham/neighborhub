@@ -1,7 +1,7 @@
 import { CreateEventStep, EventCreateSidebarProps } from "@/types/event";
 import { CalendarDays } from "lucide-react";
 import { formatDate } from "@/utils/formatDate";
-
+import { EventStatus } from "@/types/event";
 export default function EventCreateSidebar({
   currentStep,
   onStepChange,
@@ -45,7 +45,9 @@ export default function EventCreateSidebar({
         </div>
 
         <div className="mt-4 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm">
-          {event?.status || "Draft"}
+        {event?.status !== undefined
+    ? EventStatus[event.status]
+    : "Draft"}
         </div>
       </div>
 

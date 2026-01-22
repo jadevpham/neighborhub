@@ -1,56 +1,20 @@
+import { OrderData } from './event';
 // import { EventData } from "./event";
 import { number } from "framer-motion";
 import { Site } from "./site";
 import { Zone } from "./zone";
 import { FileAttachment } from "./common";
 import { MetaProps } from "./common";
-// export interface UserBy {
-//     id?: string;
-//     name?: string | null;
-//     role?: string | null;
-//     avatar?: string | null;
-//     scope?: {
-//         site?: Site;
-//         zone?: Zone;
-//     }
-// }
+import { FieldValues } from "react-hook-form";
 
-// export interface EventData {
-//     id?: string;
-//     title?: string | null;
-//     description?: string | null;
-//     type?: string | null;
-//     start_time?: string | null;
-//     end_time?: string | null;
-//     created_at?: string | null;
-//     created_by?: UserBy;
-//     updated_at?: string | null;
-//     updated_by?: UserBy;
-//     approval_at?: string | null;
-//     approval_by?: UserBy;
-//     approval_note?: string | null;
-//     cancelled_at?: string | null;
-//     cancelled_by?: UserBy;
-//     cancel_reason?: string | null;
-//     visibility?: string | null;
-//     // site_id?:
-//     // zone_id?:
-//     // status?:
-//     scope_level?: string | null; // Enum: site: Event do site_admin quản lý, zone: Event do management_board quản lý, partner: Event của partner gửi request
-//     approval_required?: boolean;
-//     approval_status?: number; // Enum
-
-//     attachments?: FileAttachment[];
-//     max_participants?: number;
-
-// }
 export enum EventStatus {
   Draft = 0,
   Pending = 1,
   Rejected = 2,
   Active = 3,
-  Cancelled = 4,
-  Deleted = 5,
+  PendingCancellation = 4,
+  Cancelled = 5,
+  Deleted = 6,
 }
 export type EventPageMode = "create" | "detail" | "edit";
 export interface EventEditorPageProps {
@@ -61,7 +25,7 @@ export interface EventEditorPageProps {
 export interface EventData {
   event_id: string;
   event_title: string | null;
-  status: number; // Event status: 0 Draft 1 Pending 2 Rejected 3 Active 4 Cancelled 5 Deleted
+  status: number; // Event status: 0 Draft 1 Pending 2 Rejected 3 Active 4 PendingCancellation 5 Cancelled 6 Deleted
   hash_tags: string[];
   cover_image_url: string | null;
   files: FileAttachment;
@@ -93,10 +57,11 @@ export interface EventListResponse {
 }
 
 export type EventDetailResponse = EventData &
-  EventTicketData & {
-    overview_description: string | null;
-    est_attendees: string | null;
-  };
+{
+  ticket_types: EventTicketData[];
+  overview_description: string | null;
+  est_attendees: string | null;
+};
 
 export interface EventPayload {
   // // gửi BE dạng multipart/form-data
@@ -111,15 +76,21 @@ export interface EventPayload {
   est_attendees: string; // swagger bắt string
   hash_tag?: string[]; // array
 }
+export enum TicketType {
+  PAID = 0,
+  FREE = 1,
+  THIRD_PARTY = 2,
+  AT_DOOR = 3,
+}
 
-export interface EventTicketPayload {
+export interface EventTicketPayload extends FieldValues {
   type?: number | null;
   quantity?: number | null;
   ticket_name?: string | null;
   price?: number | null;
   currency?: string | null;
   // url_third_party: string | null;
-  url_third_party?: string[]; //BE sau khi sửa thì chuyển sang mảng này
+  url_third_party: string[]; //BE sau khi sửa thì chuyển sang mảng này
   ticket_sales_opening_time?: {
     start_time: string | null;
     end_time: string | null;
@@ -156,9 +127,8 @@ export interface EventTicketData {
   created_at?: string | null;
 }
 
-export interface EventTicketResponse extends EventTicketData {}
+export interface EventTicketResponse extends EventTicketData { }
 
-// types/createEvent.ts
 export enum CreateEventStep {
   BUILD = "BUILD",
   TICKET = "TICKET",
@@ -178,6 +148,12 @@ export interface EventCreateFormProps {
 export interface EventTicketCreateFormProps {
   eventId: string;
   onSuccess?: () => void;
+
+  readonly?: boolean;
+  ticket?: any | null;
+  onCreated?: (ticketId: string) => void;
+  onUpdated?: () => void;
+  onDeleted?: () => void;
 }
 
 // export interface EventFormValues {
@@ -227,4 +203,50 @@ export interface AttachmentCardProps {
 
   onSelectFile?: (file: File) => void; // khi user chọn file mới
   onRemove?: () => void;               // khi remove
+}
+
+export interface EventTicketStepProps {
+  event: EventDetailResponse;
+  mode: "create" | "edit" | "detail";
+  onRefresh?: () => void; // gọi invalidate/refetch event detail
+}
+
+export interface EventCancelRequestPayload {
+  reason: string;
+}
+
+export interface EventRejectPayload {
+  reason: string;
+}
+
+export interface OrderParams extends MetaProps {
+  id: string;
+  search: string;
+  status: string;
+}
+
+export interface OrderData {
+  order_id: string,
+  buyer_info: {
+    buyer_name: string,
+    buyer_phone: string,
+    buyer_email: string
+  },
+  order_items:
+  {
+    ticket_type_id: string,
+    ticket_type_name: string,
+    quantity: number,
+    unit_price: number,
+    sub_total: number,
+  }[],
+  total_amount: number,
+  currency: string,
+  status: number,
+  ordered_date: string,
+}
+
+export interface OrderResponse {
+  meta: MetaProps;
+  data: OrderData;
 }

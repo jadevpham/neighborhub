@@ -1,14 +1,19 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { EventCreateFormProps, EventPayload, EventDetailResponse  } from "@/types/event";
+import { Controller, useForm } from "react-hook-form";
+import { EventCreateFormProps, EventPayload, EventDetailResponse } from "@/types/event";
 import { useCreateEvent } from "@/hooks/useEvent";
 import { toast } from "sonner";
 import axios from "axios";
 import { useMeQuery } from "@/hooks/useAuth";
-import { useSitesQuery } from "@/hooks/useSites";
+import { useSitesPartnerQuery } from "@/hooks/useSites";
 import { useEffect, useState } from "react";
 import AttachmentCard from "./AttachmentCard";
+import { useDebounce } from "use-debounce";
+import { Input } from "@nextui-org/react";
+import { Select, SelectItem } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
+
 export default function EventCreateForm({
   event,
   onSuccess,
@@ -21,6 +26,7 @@ export default function EventCreateForm({
     watch,
     unregister,
     reset,
+    control,
     formState: { errors },
   } = useForm<any>({
     defaultValues: {
@@ -33,16 +39,21 @@ export default function EventCreateForm({
   const site = meData?.scope?.site;
   const zone = meData?.scope?.zone;
 
-  const { data: sitesData } = useSitesQuery(
-    { page: 1, limit: 50 },
+  const [siteSearch, setSiteSearch] = useState("");
+  const [debouncedSearch] = useDebounce(siteSearch, 400);
+  const { data: sitesData, isLoading } = useSitesPartnerQuery(
+    { page: 1, limit: 1000, search: debouncedSearch || undefined, },
     { enabled: role === "partner" }
   );
 
+  console.log("sites partner Data: ", sitesData);
+
   const siteOptions =
     sitesData?.data?.map((s) => ({
-      value: s.id?.toString() ?? "",
-      label: s.name ?? "",
+      key: String(s.siteId),
+      label: s.siteName,
     })) ?? [];
+
 
   const { mutate: createEvent, isPending } = useCreateEvent();
 
@@ -57,10 +68,6 @@ export default function EventCreateForm({
     if (role === "management_board" && zone?.id) {
       setValue("location", zone.id.toString(), { shouldValidate: true });
     }
-
-    // if (role === "partner") {
-    //   setValue("scope_type", "SITE", { shouldValidate: true });
-    // }
   }, [role, site, zone, setValue]);
 
   /* -------------------------
@@ -75,7 +82,7 @@ export default function EventCreateForm({
   // Preview từ BE
   useEffect(() => {
     if (!event?.cover_image_url) return;
-  
+
     // chỉ set nếu user chưa chọn ảnh mới
     if (!coverImageFile) {
       setPreview(event.cover_image_url);
@@ -107,11 +114,11 @@ export default function EventCreateForm({
       end_date: new Date(data.end_date).toISOString(),
       est_attendees: data.est_attendees,
       hash_tag: data.hash_tag
-      ? String(data.hash_tag)
+        ? String(data.hash_tag)
           .split(",")
           .map((x) => x.trim())
-      : [],
-    
+        : [],
+
     };
 
     createEvent(payload, {
@@ -122,17 +129,17 @@ export default function EventCreateForm({
       onError: (err: any) => {
         if (axios.isAxiosError(err) && err.response?.data?.errors) {
           const errors = err.response.data.errors as Record<string, string[]>;
-      
+
           Object.values(errors).forEach((messages) => {
             messages.forEach((msg) => toast.error(msg));
           });
-      
+
           return;
         }
-      
+
         toast.error("Failed to create event");
       },
-      
+
     });
   };
 
@@ -141,8 +148,8 @@ export default function EventCreateForm({
       reset(mapEventResponseToFormValues(event));
     }
   }, [event]);
-  
 
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
   return (
     <form
       onSubmit={handleSubmit(onSubmit, (e) =>
@@ -153,45 +160,78 @@ export default function EventCreateForm({
       <h2 className="text-xl font-semibold">Create New Event</h2>
 
       {/* hidden fields */}
-      <input type="hidden" {...register("location", { required: true })} />
+      {/* <input type="hidden" {...register("location", { required: true })} /> */}
 
       {/* LOCATION */}
-      <div>
-        <label className="font-medium">Location *</label>
 
-        {role === "site_admin" && (
+      {/* /* ===== SITE ADMIN ===== */}
+      {role === "site_admin" && (
+        <div>
+          <label className="font-medium">Location *</label>
           <input
             value={site?.name ?? ""}
             disabled
             className="w-full border rounded-lg px-3 py-2 bg-gray-100"
           />
-        )}
+        </div>
+      )}
 
-        {role === "management_board" && (
+      {/* /* ===== MANAGEMENT BOARD ===== */}
+      {role === "management_board" && (
+        <div>
+          <label className="font-medium">Location *</label>
           <input
             value={zone?.name ?? ""}
             disabled
             className="w-full border rounded-lg px-3 py-2 bg-gray-100"
           />
-        )}
+        </div>
+      )}
 
-        {role === "partner" && (
-          <select
-            {...register("location", { required: true })}
-            className="w-full border rounded-lg px-3 py-2"
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Select site
-            </option>
-            {siteOptions.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-        )}
-      </div>
+      {/* /* ===== PARTNER ===== */}
+      {role === "partner" && (
+        <div className="space-y-2 mb-6">
+          <Controller
+            name="location"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <div
+                className={`transition-all duration-200 ${isLocationOpen ? "mb-[260px]" : "mb-0"
+                  }`}
+              >
+                <label className="font-medium">Location *</label>
+                <Autocomplete
+                  // label="Location *"
+                  labelPlacement="outside"
+                  placeholder="Search site..."
+                  className="w-full"
+                  items={siteOptions}
+                  inputValue={siteSearch}
+                  onInputChange={setSiteSearch}
+                  selectedKey={field.value || null}
+                  onSelectionChange={(key) => field.onChange(key ?? "")}
+                  menuTrigger="focus"
+                  onOpenChange={setIsLocationOpen}
+                  popoverProps={{
+                    portalContainer: document.body,
+                  }}
+                  classNames={{
+                    popoverContent: "z-[9999]",
+                    listbox: "max-h-[240px] overflow-y-auto",
+                  }}
+                >
+                  {(item) => (
+                    <AutocompleteItem key={item.key} textValue={item.label}>
+                      {item.label}
+                    </AutocompleteItem>
+                  )}
+                </Autocomplete>
+              </div>
+            )}
+          />
+        </div>
+      )}
 
       {/* TITLE */}
       <div>
@@ -244,36 +284,27 @@ export default function EventCreateForm({
           </div>
         )}
       </div>
-{/* FILE ATTACHMENTS */}
-{/* FILE ATTACHMENT */}
-{/* FILE ATTACHMENT */}
-<div className="mt-6">
-  <label className="font-medium">Attachment</label>
+      {/* FILE ATTACHMENT */}
+      <div className="mt-6">
+        <label className="font-medium">Attachment</label>
 
-  <AttachmentCard
-    value={event?.files}
-    localFile={attachmentFile}
-    readonly={readonly}
-    onSelectFile={(file) => setAttachmentFile(file)}
-    onRemove={() => setAttachmentFile(undefined)}
-  />
-</div>
-
-
-
-
-
-
-
+        <AttachmentCard
+          value={event?.files}
+          localFile={attachmentFile}
+          readonly={readonly}
+          onSelectFile={(file) => setAttachmentFile(file)}
+          onRemove={() => setAttachmentFile(undefined)}
+        />
+      </div>
       {/* DATES */}
       <div className="grid grid-cols-2 gap-4">
-      <label className="font-medium">Start Date *</label>
+        <label className="font-medium">Start Date *</label>
         <input
           type="datetime-local"
           {...register("start_date", { required: true })}
           className="border rounded px-3 py-2"
         />
-                <label className="font-medium">End Date *</label>
+        <label className="font-medium">End Date *</label>
         <input
           type="datetime-local"
           {...register("end_date", { required: true })}
@@ -292,17 +323,17 @@ export default function EventCreateForm({
 
       {/* TAGS */}
       <div>
-      <label className="font-medium">Hash Tags (comma separated)</label>
-      <input
-       type="text"
-        {...register("hash_tag")}
-        className="border rounded px-3 py-2 w-full"
-        placeholder="music, charity"
-      />
+        <label className="font-medium">Hash Tags (comma separated)</label>
+        <input
+          type="text"
+          {...register("hash_tag")}
+          className="border rounded px-3 py-2 w-full"
+          placeholder="music, charity"
+        />
         <p className="text-xs text-gray-500 mt-1">
           Example: <b>music, charity, event</b>
         </p>
-        </div>
+      </div>
       <button
         type="submit"
         disabled={isPending}
@@ -320,8 +351,8 @@ function mapEventResponseToFormValues(
     location:
       typeof event.location === "object"
         ? event.location?.siteId ??
-          event.location?.zoneId ??
-          ""
+        event.location?.zoneId ??
+        ""
         : event.location ?? "",
 
 
@@ -341,4 +372,3 @@ function mapEventResponseToFormValues(
     hash_tag: event.hash_tags?.join(", ") ?? "",
   };
 }
-
