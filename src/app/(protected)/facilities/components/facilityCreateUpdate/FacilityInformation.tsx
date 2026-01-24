@@ -26,8 +26,9 @@ export default function FacilityInformation({
 
   {/* TYPE */}
   <div>
-    <label className="text-sm font-medium">Type</label>
+    {/* <label className="text-sm font-medium">Type</label> */}
     <input
+      type="hidden"
       value={form.type_id}
       disabled
       className="w-full border px-3 py-2 rounded-md mt-1 bg-gray-100 cursor-not-allowed"

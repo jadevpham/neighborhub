@@ -34,22 +34,22 @@ export default function Topbar() {
       </div>
 
       {/* Search Bar */}
-      <div className="flex items-center flex-1 max-w-md mx-6 bg-white/80 border border-emerald-200 rounded-lg px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-emerald-400">
+      {/* <div className="flex items-center flex-1 max-w-md mx-6 bg-white/80 border border-emerald-200 rounded-lg px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-emerald-400">
         <Search size={18} className="text-emerald-600 mr-2" />
         <input
           type="text"
           placeholder="Search..."
           className="bg-transparent flex-1 text-sm outline-none placeholder-emerald-500"
         />
-      </div>
+      </div> */}
 
       {/* Right Section */}
       <div className="flex items-center gap-4">
         {/* Icon thông báo */}
-        <button className="relative p-2 hover:bg-emerald-900/10 rounded-xl transition">
+        {/* <button className="relative p-2 hover:bg-emerald-900/10 rounded-xl transition">
           <Bell size={20} className="text-emerald-800" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-        </button>
+        </button> */}
         {/* Avatar + thông tin user */}
         <div ref={dropdownRef} className="relative cursor-pointer select-none">
           <div
