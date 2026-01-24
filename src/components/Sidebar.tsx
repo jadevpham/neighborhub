@@ -24,7 +24,7 @@ const menu = [
     name: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    role: ["system_admin", "site_admin", "management_board"],
+    role: ["system_admin", "site_admin"],
   },
   {
     name: "Users",
@@ -44,12 +44,12 @@ const menu = [
     icon: Calendar,
     role: ["site_admin", "management_board", "partner"],
   },
-  {
-    name: "Apartments",
-    href: "/apartments",
-    icon: Home, 
-    role: ["site_admin", "management_board"],
-  },
+  // {
+  //   name: "Apartments",
+  //   href: "/apartments",
+  //   icon: Home, 
+  //   role: ["site_admin", "management_board"],
+  // },
   {
     name: "Feedbacks",
     href: "/feedbacks",

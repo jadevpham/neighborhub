@@ -66,7 +66,7 @@ export default function LoginForm() {
       {
         onSuccess: () => {
           toast.success("Login success!");
-          router.replace("/dashboard");
+          router.replace("/events");
         },
         onError: (err: unknown) => {
           // Ép kiểu an toàn

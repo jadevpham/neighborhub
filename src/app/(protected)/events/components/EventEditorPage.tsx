@@ -11,8 +11,12 @@ import { useApproveEvent, useCancelRequestEvent, useDeleteEvent, useEventDetailQ
 import EventTicketStep from "./EventTicketStep";
 import { Button } from "@nextui-org/react";
 import { EventActionConfig } from "@/components/StatusBadge";
-
+import { useMeQuery } from "@/hooks/useAuth";
 export default function EventEditorPage({ mode, eventId }: EventEditorPageProps) {
+    
+  const { data: meData } = useMeQuery();
+  const role = meData?.user?.role;
+
   const [currentEventId, setCurrentEventId] = useState<string | undefined>(
     eventId
   );
@@ -86,7 +90,6 @@ useEffect(() => {
   if (currentEventId && isError && !event) {
     return <div>Failed to load event</div>;
   }
-  
 
   
   return (
@@ -210,7 +213,7 @@ useEffect(() => {
         }
 
         /* Pending (Approve / Reject) */
-        if (action.type === "review") {
+        if (action.type === "review" && role === "site_admin") {
           return (
             <div className="flex gap-2">
               <Button
