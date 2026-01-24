@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import Sidebar from "@/components/Sidebar";
 import Topbar from "@/components/Topbar";
 import { Toaster } from "sonner";
+import AIChatGate from "@/components/AIChatGate";
+
 
 /**
  * #### I. Hàm getCurrentUser()
@@ -66,7 +68,8 @@ export default function ProtectedLayout({
 
   // Nếu có user (đã login) → render layout admin: dashboard, sidebar, topbar, ...
   return (
-    <main className="relative min-h-screen flex overflow-hidden">
+    // <main className="relative min-h-screen flex overflow-hidden">
+    <main className="relative min-h-screen flex">
       {/* Background image */}
       <img
         src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?q=80&w=2200&auto=format&fit=crop"

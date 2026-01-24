@@ -43,7 +43,7 @@ export default function ReferendumItem({ data, onClick }: Props) {
         <div className="flex items-center gap-1">
           <MapPin className="h-3.5 w-3.5" />
           <span>
-            Site: <b>{data.site_id}</b> · Zone: <b>{data.zone_id}</b>
+            Site: <b>{data.site_name}</b> · Zone: <b>{data.zone_name}</b>
           </span>
         </div>
 

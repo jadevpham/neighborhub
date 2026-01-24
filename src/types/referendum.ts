@@ -11,8 +11,8 @@ export interface ReferendumData {
     referendum_id: string,
     title: string,
     status: number | null,
-    site_id: string,
-    zone_id: string,
+    site_name: string,
+    zone_name: string,
     creator_name: string,
     user_vote_status: boolean,
     created_at: string,
@@ -35,10 +35,10 @@ export interface ReferendumPayload {
 }
 
 export interface ReferendumDetailData extends ReferendumData {
-    id: string; // BE sửa thành referendum_id thì xóa
+    //id: string; // BE sửa thành referendum_id thì xóa
     description: string;
-    site_id: string;   // BE sủa thành site_name, zone_name thì xóa
-    zone_id: string;
+    // site_id: string;   // BE sủa thành site_name, zone_name thì xóa
+    // zone_id: string;
     // site_name: string;   // BE sủa thành site_name, zone_name thì dùng
     // zone_name: string;
     settings: {

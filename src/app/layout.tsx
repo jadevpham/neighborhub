@@ -4,7 +4,7 @@ import "./globals.css";
 import QueryProvider from "../providers/QueryProvider";
 import { Toaster } from "sonner";
 import { ConfirmProvider } from "@/components/ConfirmProvider"; // <-- thêm vào
-
+import AIChatGate from "@/components/AIChatGate";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -37,7 +37,10 @@ export default function RootLayout({
         {/* Confirm Modal dùng chung toàn app */}
         <ConfirmProvider>
           {/* React Query Provider */}
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            {children}
+            <AIChatGate />
+          </QueryProvider>
         </ConfirmProvider>
       </body>
     </html>

@@ -72,10 +72,10 @@ export default function ReferendumDetailPage() {
 
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
           <div>
-            <b>Site:</b> {data.site_id}
+            <b>Site:</b> {data.site_name}
           </div>
           <div>
-            <b>Zone:</b> {data.zone_id}
+            <b>Zone:</b> {data.zone_name}
           </div>
           <div>
             <b>Created by:</b> {data.creator_name}
