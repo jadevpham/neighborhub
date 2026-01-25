@@ -34,6 +34,11 @@ const ReferendumSearchFilter: React.FC<ReferendumSearchFilterProps> = ({
 
     onFilterChange(cleared);
   };
+  const REFERENDUM_FILTER_STATUSES: ReferendumStatus[] = [
+    ReferendumStatus.Active,
+    ReferendumStatus.Closed,
+  ];
+
 
   return (
     <form
@@ -62,13 +67,11 @@ const ReferendumSearchFilter: React.FC<ReferendumSearchFilterProps> = ({
           className="border px-3 py-2 rounded-md"
         >
           <option value="">All</option>
-          {(Object.keys(referendumStatusMap) as unknown as ReferendumStatus[]).map(
-            (status) => (
-              <option key={status} value={status}>
-                {referendumStatusMap[status].label}
-              </option>
-            )
-          )}
+          {REFERENDUM_FILTER_STATUSES.map((status) => (
+            <option key={status} value={status}>
+              {referendumStatusMap[status].label}
+            </option>
+          ))}
         </select>
       </div>
 
