@@ -36,7 +36,7 @@ export default function AIChatBox() {
     limit: 100,
   
     search: null,
-    status: 1,        // ví dụ: 1 = published / active
+    status: null,        // ví dụ: 1 = published / active
     start_date: null,
     end_date: null,
   };
