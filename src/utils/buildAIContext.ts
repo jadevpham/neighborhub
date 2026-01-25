@@ -76,16 +76,10 @@ export function buildAIContext({
         ? n.reactions.reduce((sum: number, r: any) => sum + (r.count ?? 0), 0)
         : 0;
   
-      ctx += `
-  - Title: ${n.title}
-    Author: ${n.author?.name}
-    Scope: ${scopeLabel}
-    Published at: ${n.published_at}
-    Views: ${n.views}
-    Total reactions: ${totalReactions}
-  `;
+      ctx += `- News titled "${n.title}" was published by ${n.author?.name} (${scopeLabel}), has ${n.views} views and ${totalReactions} reactions.\n`;
     });
   }
+  
   
 
   if (feedbacks.length) {
